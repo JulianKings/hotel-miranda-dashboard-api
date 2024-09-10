@@ -5,6 +5,12 @@ import { UserService } from "../services/userService";
 const users_all = expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const userService = new UserService();
     res.status(200).json(userService.loadAll());
+});
+
+const sso_check = expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    res.json({
+        user: req.user
+      })
 })
 
 const users_by_id = expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
@@ -33,4 +39,4 @@ const delete_user = expressAsyncHandler(async (req: Request<{id: string}>, res: 
     }
 })
 
-export { users_all, users_by_id, create_user, update_user, delete_user }
+export { users_all, sso_check, users_by_id, create_user, update_user, delete_user }

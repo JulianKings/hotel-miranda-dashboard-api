@@ -36,6 +36,19 @@ var UserService = exports.UserService = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "loadUserByName",
+    value: function loadUserByName(name) {
+      var users = (0, _jsonParser.readJsonFile)(_path["default"].resolve(__dirname, "../data/user.json"));
+      var user = users.filter(function (userElement) {
+        return userElement.name === name;
+      });
+      if (user.length > 0) {
+        return user[0];
+      } else {
+        return null;
+      }
+    }
+  }, {
     key: "updateUser",
     value: function updateUser(userObject) {
       (0, _jsonParser.updateJsonFile)(_path["default"].resolve(__dirname, "../data/user.json"), userObject);

@@ -20,6 +20,18 @@ export class UserService {
         }
     }
 
+    loadUserByName(name: string): ApiUserInterface | null {
+        const users = readJsonFile(path.resolve(__dirname, "../data/user.json"));
+        const user = users.filter((userElement) => userElement.name === name);
+
+        if(user.length > 0)
+        {
+            return user[0];
+        } else {
+            return null;
+        }
+    }
+
     updateUser(userObject: ApiUserInterface)
     {
         updateJsonFile(path.resolve(__dirname, "../data/user.json"), userObject)
