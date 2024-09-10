@@ -10,6 +10,6 @@ var router = _express["default"].Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.send('home page');
+  res.send('error: forbidden');
 });
 var _default = exports["default"] = router;

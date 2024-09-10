@@ -6,6 +6,7 @@ import logger from 'morgan';
 
 import indexRouter from './routes/index';
 import usersRouter from './routes/userRoutes';
+import contactRouter from './routes/contactRoutes';
 
 var app = express();
 
@@ -18,5 +19,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
+app.use('/contact', contactRouter);
 
 export default app;
