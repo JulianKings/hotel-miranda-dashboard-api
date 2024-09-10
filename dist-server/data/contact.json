@@ -1,4 +1,3 @@
-export const contactArray = `
 [
     {
       "id": "179d8d6c-2249-41bc-821a-fe1c0fa2812e",
@@ -1870,5 +1869,4 @@ export const contactArray = `
       "subject": "sit in qui enim est non esse tempor cillum do reprehenderit laboris nisi elit",
       "comment": "qui id occaecat aute duis do labore esse ad duis do qui qui dolor dolor mollit eu officia mollit minim dolor veniam proident consectetur deserunt proident ullamco labore et voluptate ut sint excepteur laboris nulla Lorem veniam veniam Lorem excepteur ea nostrud in voluptate incididunt esse quis ipsum do culpa elit tempor et sint consequat amet excepteur quis do laborum aliquip cillum sunt ea ea nostrud ullamco id pariatur est eu exercitation magna laboris sit cupidatat eiusmod consequat magna enim ex cupidatat reprehenderit aute cupidatat nisi ea tempor deserunt deserunt adipisicing cillum magna adipisicing amet esse mollit duis excepteur quis ipsum incididunt ullamco veniam sunt culpa nisi aute dolor excepteur magna nisi voluptate amet est ea elit minim adipisicing dolore reprehenderit irure in sint sunt enim fugiat sit magna quis proident ad proident adipisicing dolore duis veniam dolor ut do fugiat est ad proident reprehenderit ad deserunt enim labore non amet nostrud"
     }
-  ]
-`;
+]

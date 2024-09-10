@@ -11,7 +11,7 @@ const debug = debugLib('hotel-miranda-dashboard-api:server');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3005');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
@@ -82,8 +82,11 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  if(addr)
+  {
+    var bind = typeof addr === 'string'
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
+    debug('Listening on ' + bind);
+  }
 }

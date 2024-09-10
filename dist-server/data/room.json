@@ -1,4 +1,4 @@
-export const roomArray = `[
+[
     {
       "id": "83e2a76c-0c9b-46eb-9d5d-c29ee4cf718b",
       "type": "Single Bed",
@@ -3983,4 +3983,4 @@ export const roomArray = `[
       "status": "available",
       "description": "Lorem ipsum dolor sit amet."
     }
-  ]`
+]

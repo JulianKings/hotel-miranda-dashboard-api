@@ -1,4 +1,4 @@
-export const userArray = `[
+[
     {
       "id": "3e1ae40e-07a0-4c28-84b5-740df3e9a37d",
       "name": "Developer",
@@ -1286,4 +1286,4 @@ export const userArray = `[
       "status": "inactive",
       "position": "manager"
     }
-  ]`;
+]

@@ -1,4 +1,4 @@
-export const bookingArray = `[
+[
     {
       "id": "8a3b3524-d143-4fc2-9948-ec6a626b23f2",
       "customer_name": "Evelyn Franecki",
@@ -1660,4 +1660,4 @@ export const bookingArray = `[
       "check_out": "2024-08-29T00:00:00.000Z",
       "notes": "Amazing Description!"
     }
-  ]`;
+]
