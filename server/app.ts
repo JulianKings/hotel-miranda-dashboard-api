@@ -8,6 +8,7 @@ import indexRouter from './routes/index';
 import usersRouter from './routes/userRoutes';
 import contactRouter from './routes/contactRoutes';
 import roomRouter from './routes/roomRoutes';
+import bookingRouter from './routes/bookingRoutes';
 
 var app = express();
 
@@ -22,5 +23,6 @@ app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/contact', contactRouter);
 app.use('/room', roomRouter);
+app.use('/bookings', bookingRouter);
 
 export default app;
