@@ -7,13 +7,13 @@ import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
-import indexRouter from './routes/index';
-import usersRouter from './routes/userRoutes';
-import contactRouter from './routes/contactRoutes';
-import roomRouter from './routes/roomRoutes';
-import bookingRouter from './routes/bookingRoutes';
-import loginRouter from './routes/loginRoutes';
-import { applyPassport } from './middleware/auth';
+import indexController from './controllers/indexController';
+import usersController from './controllers/userController';
+import contactController from './controllers/contactController';
+import roomController from './controllers/roomController';
+import bookingController from './controllers/bookingController';
+import loginController from './controllers/loginController';
+import { applyPassportMiddleware } from './middleware/auth';
 
 var app = express();
 
@@ -29,19 +29,19 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.session());
 
-app.use('/', indexRouter);
-
-const userRouterHandler = usersRouter(passport);
+const indexRouterHandler = indexController();
+app.use('/', indexRouterHandler);
+const userRouterHandler = usersController(passport);
 app.use('/user', passport.authenticate('jwt', { session: false }), userRouterHandler);
-const contactRouterHandler = contactRouter(passport);
+const contactRouterHandler = contactController(passport);
 app.use('/contact', passport.authenticate('jwt', { session: false }), contactRouterHandler);
-const roomRouterHandler = roomRouter(passport);
+const roomRouterHandler = roomController(passport);
 app.use('/room', passport.authenticate('jwt', { session: false }), roomRouterHandler);
-const bookingRouterHandler = bookingRouter(passport);
+const bookingRouterHandler = bookingController(passport);
 app.use('/bookings', passport.authenticate('jwt', { session: false }), bookingRouterHandler);
-const loginRouterHandler = loginRouter(passport);
+const loginRouterHandler = loginController(passport);
 app.use('/login', loginRouterHandler);
 
-applyPassport(passport);
+applyPassportMiddleware(passport);
 
 export default app;

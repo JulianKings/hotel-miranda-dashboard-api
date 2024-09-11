@@ -29,7 +29,7 @@ function updateJsonFile(filePath, newData) {
             return element;
           }
         });
-        _fs["default"].writeFile(filePath, JSON.stringify(updatedData), function (err) {
+        _fs["default"].writeFile(filePath, JSON.stringify(updatedData, null, 2), function (err) {
           if (err) {
             console.error("Error writing file:", err);
             return;
@@ -37,7 +37,7 @@ function updateJsonFile(filePath, newData) {
         });
       } else {
         jsonData.push(newData);
-        _fs["default"].writeFile(filePath, JSON.stringify(jsonData), function (err) {
+        _fs["default"].writeFile(filePath, JSON.stringify(jsonData, null, 2), function (err) {
           if (err) {
             console.error("Error writing file:", err);
             return;

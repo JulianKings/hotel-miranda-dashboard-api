@@ -6,7 +6,7 @@ import { UserService } from '../services/userService';
 const LocalJWTStrategy = jwtStrategy;
 const LocalExtractJWT = ExtractJwt;
 
-export const applyPassport = (passport) =>
+export const applyPassportMiddleware = (passport) =>
 {
     const nameField = 'username';
     const pwdField = 'password';

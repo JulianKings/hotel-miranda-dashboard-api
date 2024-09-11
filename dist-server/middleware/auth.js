@@ -4,7 +4,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.applyPassport = void 0;
+exports.applyPassportMiddleware = void 0;
 var _passportLocal = require("passport-local");
 var _passportJwt = require("passport-jwt");
 var _bcrypt = _interopRequireDefault(require("bcrypt"));
@@ -16,7 +16,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 var LocalStrategy = _passportLocal.Strategy;
 var LocalJWTStrategy = _passportJwt.Strategy;
 var LocalExtractJWT = _passportJwt.ExtractJwt;
-var applyPassport = exports.applyPassport = function applyPassport(passport) {
+var applyPassportMiddleware = exports.applyPassportMiddleware = function applyPassportMiddleware(passport) {
   var nameField = 'username';
   var pwdField = 'password';
   var userService = new _userService.UserService();

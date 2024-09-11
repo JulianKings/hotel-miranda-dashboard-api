@@ -28,7 +28,7 @@ export function updateJsonFile(filePath: string, newData: (ApiAbstractInterface 
                     }
                 });
 
-                fs.writeFile(filePath, JSON.stringify(updatedData), (err) => { 
+                fs.writeFile(filePath, JSON.stringify(updatedData, null, 2), (err) => { 
                     if (err) { 
                         console.error("Error writing file:", err); 
                         return; 
@@ -37,7 +37,7 @@ export function updateJsonFile(filePath: string, newData: (ApiAbstractInterface 
             } else {
                 jsonData.push(newData);
 
-                fs.writeFile(filePath, JSON.stringify(jsonData), (err) => { 
+                fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => { 
                     if (err) { 
                         console.error("Error writing file:", err); 
                         return; 
