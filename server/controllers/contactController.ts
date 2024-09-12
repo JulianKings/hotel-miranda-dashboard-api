@@ -18,7 +18,13 @@ export default function (passport)
 
     contactController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const contactService = new ContactService();
-        res.status(200).json(contactService.loadContactById(req.params.id));
+        const contactInformation = contactService.loadContactById(req.params.id);
+        if(contactInformation !== null)
+        {
+            res.status(200).json(contactInformation);
+        } else {
+            res.status(400).json({ error: 'Invalid Contact' })
+        }
     }));
 
     contactController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
@@ -26,6 +32,8 @@ export default function (passport)
         if(contactService.loadContactById(req.params.id) !== null)
         {
             res.status(201).json(contactService.updateContact(req.body));
+        } else {
+            res.status(400).json({ error: 'Invalid Contact' })
         }
     }));
 
@@ -34,6 +42,8 @@ export default function (passport)
         if(contactService.loadContactById(req.params.id) !== null)
         {
             res.status(201).json(contactService.deleteContact(req.params.id));
+        } else {
+            res.status(400).json({ error: 'Invalid Contact' })
         }
     }));
 

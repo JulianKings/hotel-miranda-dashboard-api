@@ -26,6 +26,8 @@ export default function (passport)
         if(bookingService.loadBookingById(req.params.id) !== null)
         {
             res.status(201).json(bookingService.updateBooking(req.body));
+        } else {
+            res.status(400).json({ error: 'Invalid Booking' })
         }
     }));
 
@@ -34,6 +36,8 @@ export default function (passport)
         if(bookingService.loadBookingById(req.params.id) !== null)
         {
             res.status(201).json(bookingService.deleteBooking(req.params.id));
+        } else {
+            res.status(400).json({ error: 'Invalid Booking' })
         }
     }));
 

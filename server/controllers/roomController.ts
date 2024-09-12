@@ -18,7 +18,13 @@ export default function (passport)
 
     roomController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const roomService = new RoomService();
-        res.status(200).json(roomService.loadRoomById(req.params.id));
+        const roomInformation = roomService.loadRoomById(req.params.id);
+        if(roomInformation !== null)
+        {
+            res.status(200).json(roomInformation);
+        } else {
+            res.status(400).json({ error: 'Invalid Room' })
+        }
     }));
 
     roomController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
@@ -26,6 +32,8 @@ export default function (passport)
         if(roomService.loadRoomById(req.params.id) !== null)
         {
             res.status(201).json(roomService.updateRoom(req.body));
+        } else {
+            res.status(400).json({ error: 'Invalid Room' })
         }
     }));
 
@@ -34,6 +42,8 @@ export default function (passport)
         if(roomService.loadRoomById(req.params.id) !== null)
         {
             res.status(201).json(roomService.deleteRoom(req.params.id));
+        } else {
+            res.status(400).json({ error: 'Invalid Room' })
         }
     }));
 

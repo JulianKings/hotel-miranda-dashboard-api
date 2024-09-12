@@ -12,9 +12,12 @@ export default function (passport)
     }));
 
 	userController.get('/sso', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        res.json({
-            user: req.user
-          })
+        if(req.user !== null)
+        {
+            res.status(200).json({ user: req.user })
+        } else {
+            res.status(400).json({ error: 'Invalid user logged in'});
+        }
     }));
 
 	userController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -24,7 +27,13 @@ export default function (passport)
 
 	userController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const userService = new UserService();
-        res.status(200).json(userService.loadUserById(req.params.id));
+        const userInformation = userService.loadUserById(req.params.id);
+        if(userInformation !== null)
+        {
+            res.status(200).json(userInformation);
+        } else {
+            res.status(400).json({ error: 'Invalid User' })
+        }
     }));
 
 	userController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
@@ -32,6 +41,8 @@ export default function (passport)
         if(userService.loadUserById(req.params.id) !== null)
         {
             res.status(201).json(userService.updateUser(req.body));
+        } else {
+            res.status(400).json({ error: 'Invalid User' })
         }
     }));
 
@@ -40,6 +51,8 @@ export default function (passport)
         if(userService.loadUserById(req.params.id) !== null)
         {
             res.status(201).json(userService.deleteUser(req.params.id));
+        } else {
+            res.status(400).json({ error: 'Invalid User' })
         }
     }));
 
