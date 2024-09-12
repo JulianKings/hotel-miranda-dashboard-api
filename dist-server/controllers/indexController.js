@@ -21,9 +21,9 @@ function _default() {
           case 0:
             welcomeObject = {
               name: 'Hotel Miranda',
-              routes: [['/user GET', '/user POST', '/user/sso GET', '/user/:id GET', '/user/:id PUT', '/user/:id DELETE'], ['/login POST'], ['/contact GET', '/contact POST', '/contact/:id GET', '/contact/:id PUT', '/contact/:id DELETE'], ['/booking GET', '/booking POST', '/booking/:id GET', '/booking/:id PUT', '/booking/:id DELETE'], ['/room GET', '/room POST', '/room/:id GET', '/room/:id PUT', '/room/:id DELETE']]
+              routes: [['/user GET', '/user POST', '/user/sso GET', '/user/:id GET', '/user/:id PUT', '/user/:id DELETE'], ['/login POST'], ['/api-docs GET'], ['/contact GET', '/contact POST', '/contact/:id GET', '/contact/:id PUT', '/contact/:id DELETE'], ['/booking GET', '/booking POST', '/booking/:id GET', '/booking/:id PUT', '/booking/:id DELETE'], ['/room GET', '/room POST', '/room/:id GET', '/room/:id PUT', '/room/:id DELETE']]
             };
-            res.send(JSON.stringify(welcomeObject, null, 2));
+            res.json(welcomeObject);
           case 2:
           case "end":
             return _context.stop();

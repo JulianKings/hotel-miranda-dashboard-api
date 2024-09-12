@@ -21,6 +21,9 @@ export default function ()
                     '/login POST',
                 ],
                 [
+                    '/api-docs GET',
+                ],
+                [
                     '/contact GET',
                     '/contact POST',
                     '/contact/:id GET',
@@ -44,7 +47,7 @@ export default function ()
             ]
           }
         
-          res.send(JSON.stringify(welcomeObject, null, 2));
+          res.json(welcomeObject);
     }));
 
     return indexController;

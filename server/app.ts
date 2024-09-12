@@ -6,6 +6,8 @@ import session from 'express-session';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocs from './swagger.json';
 
 import indexController from './controllers/indexController';
 import usersController from './controllers/userController';
@@ -13,9 +15,10 @@ import contactController from './controllers/contactController';
 import roomController from './controllers/roomController';
 import bookingController from './controllers/bookingController';
 import loginController from './controllers/loginController';
+
 import { applyPassportMiddleware } from './middleware/auth';
 
-var app = express();
+const app = express();
 
 app.set('jwt_secret_password', process.env.JWT_SECURE_KEY);
 
@@ -28,6 +31,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.session());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 const indexRouterHandler = indexController();
 app.use('/', indexRouterHandler);

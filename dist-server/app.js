@@ -12,6 +12,8 @@ var _expressSession = _interopRequireDefault(require("express-session"));
 var _passport = _interopRequireDefault(require("passport"));
 var _cookieParser = _interopRequireDefault(require("cookie-parser"));
 var _morgan = _interopRequireDefault(require("morgan"));
+var _swaggerUiExpress = _interopRequireDefault(require("swagger-ui-express"));
+var _swagger = _interopRequireDefault(require("./swagger.json"));
 var _indexController = _interopRequireDefault(require("./controllers/indexController"));
 var _userController = _interopRequireDefault(require("./controllers/userController"));
 var _contactController = _interopRequireDefault(require("./controllers/contactController"));
@@ -36,6 +38,7 @@ app.use((0, _expressSession["default"])({
   saveUninitialized: true
 }));
 app.use(_passport["default"].session());
+app.use('/api-docs', _swaggerUiExpress["default"].serve, _swaggerUiExpress["default"].setup(_swagger["default"]));
 var indexRouterHandler = (0, _indexController["default"])();
 app.use('/', indexRouterHandler);
 var userRouterHandler = (0, _userController["default"])(_passport["default"]);
