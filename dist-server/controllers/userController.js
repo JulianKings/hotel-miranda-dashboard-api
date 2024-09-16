@@ -37,9 +37,15 @@ function _default(passport) {
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
-            res.json({
-              user: req.user
-            });
+            if (req.user !== null) {
+              res.status(200).json({
+                user: req.user
+              });
+            } else {
+              res.status(400).json({
+                error: 'Invalid user logged in'
+              });
+            }
           case 1:
           case "end":
             return _context2.stop();
@@ -70,13 +76,20 @@ function _default(passport) {
   }()));
   userController.get('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
-      var userService;
+      var userService, userInformation;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             userService = new _userService.UserService();
-            res.status(200).json(userService.loadUserById(req.params.id));
-          case 2:
+            userInformation = userService.loadUserById(req.params.id);
+            if (userInformation !== null) {
+              res.status(200).json(userInformation);
+            } else {
+              res.status(400).json({
+                error: 'Invalid User'
+              });
+            }
+          case 3:
           case "end":
             return _context4.stop();
         }
@@ -95,6 +108,10 @@ function _default(passport) {
             userService = new _userService.UserService();
             if (userService.loadUserById(req.params.id) !== null) {
               res.status(201).json(userService.updateUser(req.body));
+            } else {
+              res.status(400).json({
+                error: 'Invalid User'
+              });
             }
           case 2:
           case "end":
@@ -115,6 +132,10 @@ function _default(passport) {
             userService = new _userService.UserService();
             if (userService.loadUserById(req.params.id) !== null) {
               res.status(201).json(userService.deleteUser(req.params.id));
+            } else {
+              res.status(400).json({
+                error: 'Invalid User'
+              });
             }
           case 2:
           case "end":

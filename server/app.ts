@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocs from './swagger.json';
+import mongoose from 'mongoose';
 
 import indexController from './controllers/indexController';
 import usersController from './controllers/userController';
@@ -20,7 +21,17 @@ import { applyPassportMiddleware } from './middleware/auth';
 
 const app = express();
 
-app.set('jwt_secret_password', process.env.JWT_SECURE_KEY);
+mongoose.set("strictQuery", false);
+
+const jwtKey: string = (process.env.JWT_SECURE_KEY !== undefined) ? process.env.JWT_SECURE_KEY : 'defaultSecretKey915534b';
+const mongoUri: string = (process.env.MONGODB_URI !== undefined) ? process.env.MONGODB_URI : '';
+
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoUri);
+}
+
+app.set('jwt_secret_password', jwtKey);
 
 app.use(logger('dev'));
 app.use(cors());

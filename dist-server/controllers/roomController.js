@@ -52,13 +52,20 @@ function _default(passport) {
   }()));
   roomController.get('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
-      var roomService;
+      var roomService, roomInformation;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
             roomService = new _roomService.RoomService();
-            res.status(200).json(roomService.loadRoomById(req.params.id));
-          case 2:
+            roomInformation = roomService.loadRoomById(req.params.id);
+            if (roomInformation !== null) {
+              res.status(200).json(roomInformation);
+            } else {
+              res.status(400).json({
+                error: 'Invalid Room'
+              });
+            }
+          case 3:
           case "end":
             return _context3.stop();
         }
@@ -77,6 +84,10 @@ function _default(passport) {
             roomService = new _roomService.RoomService();
             if (roomService.loadRoomById(req.params.id) !== null) {
               res.status(201).json(roomService.updateRoom(req.body));
+            } else {
+              res.status(400).json({
+                error: 'Invalid Room'
+              });
             }
           case 2:
           case "end":
@@ -97,6 +108,10 @@ function _default(passport) {
             roomService = new _roomService.RoomService();
             if (roomService.loadRoomById(req.params.id) !== null) {
               res.status(201).json(roomService.deleteRoom(req.params.id));
+            } else {
+              res.status(400).json({
+                error: 'Invalid Room'
+              });
             }
           case 2:
           case "end":

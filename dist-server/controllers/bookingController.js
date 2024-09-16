@@ -77,6 +77,10 @@ function _default(passport) {
             bookingService = new _bookingServices.BookingService();
             if (bookingService.loadBookingById(req.params.id) !== null) {
               res.status(201).json(bookingService.updateBooking(req.body));
+            } else {
+              res.status(400).json({
+                error: 'Invalid Booking'
+              });
             }
           case 2:
           case "end":
@@ -97,6 +101,10 @@ function _default(passport) {
             bookingService = new _bookingServices.BookingService();
             if (bookingService.loadBookingById(req.params.id) !== null) {
               res.status(201).json(bookingService.deleteBooking(req.params.id));
+            } else {
+              res.status(400).json({
+                error: 'Invalid Booking'
+              });
             }
           case 2:
           case "end":

@@ -20,7 +20,7 @@
     "paths": {
         "/users": {
             "get": {
-                "summary": "get users",
+                "summary": "Get user list",
                 "operationId": "ListFeatures",
                 "responses": {
                 "200": {
