@@ -1,6 +1,6 @@
 import path from 'path';
 import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
-import { ApiBookingInterface } from '../interfaces/apiManagement';
+import { ApiBookingInterface } from '../interfaces/bookings';
 
 export class BookingService {
     loadAll(): ApiBookingInterface[] {

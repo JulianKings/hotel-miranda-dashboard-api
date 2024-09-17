@@ -1,7 +1,6 @@
-import { ApiContactInterface } from "../interfaces/apiManagement";
-
 import path from 'path';
 import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
+import { ApiContactInterface } from '../interfaces/contact';
 
 export class ContactService {
     loadAll(): ApiContactInterface[] {

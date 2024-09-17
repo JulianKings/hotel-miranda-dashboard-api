@@ -1,7 +1,6 @@
-import { ApiUserInterface } from "../interfaces/apiManagement";
-
 import path from 'path';
 import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
+import { ApiUserInterface } from '../interfaces/user';
 
 export class UserService {
     loadAll(): ApiUserInterface[] {

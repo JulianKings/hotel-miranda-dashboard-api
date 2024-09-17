@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
+import { ApiUserInterface } from '../interfaces/user';
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const userSchema = new Schema<ApiUserInterface>({
     name: { type: String, required: true },
     full_name: { type: String, required: true },
     password: { type: String, required: true },
@@ -15,6 +16,6 @@ const userSchema = new Schema({
     position: { type: String, required: true }
   });
 
-const userModel = mongoose.model("user", userSchema);
+const userModel = mongoose.model<ApiUserInterface>("user", userSchema);
 
 export default userModel;

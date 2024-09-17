@@ -1,7 +1,6 @@
-import { ApiRoomInterface } from "../interfaces/apiManagement";
-
 import path from 'path';
 import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
+import { ApiRoomInterface } from '../interfaces/room';
 
 export class RoomService {
     loadAll(): ApiRoomInterface[] {
