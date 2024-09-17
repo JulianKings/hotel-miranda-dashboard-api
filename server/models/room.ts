@@ -7,7 +7,7 @@ const roomSchema = new Schema<ApiRoomInterface>({
     type: { type: String, required: true },
     floor: { type: String, required: true },
     number: { type: Number, required: true },        
-    amenities: { type: String, required: true },
+    amenities: { type: [String], required: true },
     images: { type: String, required: true },
     price: { type: Number, required: true },
     offer: { type: Number, required: true },

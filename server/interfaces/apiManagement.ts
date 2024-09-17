@@ -1,4 +1,6 @@
+import { Types } from "mongoose";
+
 export interface ApiAbstractInterface
 {
-    id: string
+    id: string | undefined | Types.ObjectId
 }

@@ -30,41 +30,44 @@ var applyPassportMiddleware = exports.applyPassportMiddleware = function applyPa
         while (1) switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
-            user = userService.loadUserByName(name);
+            _context.next = 3;
+            return userService.loadUserByName(name);
+          case 3:
+            user = _context.sent;
             if (user) {
-              _context.next = 4;
+              _context.next = 6;
               break;
             }
             return _context.abrupt("return", done(null, false, {
               path: nameField,
               msg: 'User not found'
             }));
-          case 4:
-            _context.next = 6;
-            return _bcrypt["default"].compare(password, user.password);
           case 6:
+            _context.next = 8;
+            return _bcrypt["default"].compare(password, user.password);
+          case 8:
             match = _context.sent;
             if (match) {
-              _context.next = 9;
+              _context.next = 11;
               break;
             }
             return _context.abrupt("return", done(null, false, {
               path: pwdField,
               msg: 'Wrong Password'
             }));
-          case 9:
+          case 11:
             return _context.abrupt("return", done(null, user, {
               message: 'Logged in Successfully'
             }));
-          case 12:
-            _context.prev = 12;
+          case 14:
+            _context.prev = 14;
             _context.t0 = _context["catch"](0);
             return _context.abrupt("return", done(_context.t0));
-          case 15:
+          case 17:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 14]]);
     }));
     return function (_x, _x2, _x3) {
       return _ref.apply(this, arguments);

@@ -45,7 +45,7 @@ var BookingService = exports.BookingService = /*#__PURE__*/function () {
     key: "deleteBooking",
     value: function deleteBooking(bookingId) {
       (0, _jsonParser.deleteFromJsonFile)(_path["default"].resolve(__dirname, "../data/bookings.json"), {
-        id: bookingId
+        _id: bookingId
       });
       return {
         id: bookingId

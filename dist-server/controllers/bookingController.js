@@ -52,13 +52,20 @@ function _default(passport) {
   }()));
   bookingController.get('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
-      var bookingService;
+      var bookingService, bookingInformation;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
             bookingService = new _bookingServices.BookingService();
-            res.status(200).json(bookingService.loadBookingById(req.params.id));
-          case 2:
+            bookingInformation = bookingService.loadBookingById(req.params.id);
+            if (bookingInformation !== null) {
+              res.status(200).json(bookingInformation);
+            } else {
+              res.status(400).json({
+                error: 'Invalid Booking'
+              });
+            }
+          case 3:
           case "end":
             return _context3.stop();
         }

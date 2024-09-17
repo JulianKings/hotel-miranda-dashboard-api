@@ -5,7 +5,7 @@ export interface ApiBookingInterface extends ApiAbstractInterface {
     customer_name: string,
     date: Date,
     status: 'checking_out' | 'checking_in' | 'in_progress',
-    room: Types.ObjectId,
+    room: Types.ObjectId | string,
     check_in: Date,
     check_out: Date,
     notes: string    

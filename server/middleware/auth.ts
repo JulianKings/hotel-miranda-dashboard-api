@@ -22,7 +22,7 @@ export const applyPassportMiddleware = (passport) =>
             },
             async (name, password, done) => {
             try {
-                const user = userService.loadUserByName(name);
+                const user = await userService.loadUserByName(name);
 
                 if (!user) {
                     return done(null, false, { path: nameField, msg: 'User not found' });

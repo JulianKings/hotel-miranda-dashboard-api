@@ -4,7 +4,7 @@ export interface ApiRoomInterface extends ApiAbstractInterface {
     type: 'Single Bed' | 'Double Bed' | 'Double Superior' | 'Suite',
     floor: string,
     number: number,        
-    amenities: string,
+    amenities: string[],
     images: string,
     price: number,
     offer: number,

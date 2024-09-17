@@ -27,7 +27,7 @@ export class BookingService {
 
     deleteBooking(bookingId: string)
     {
-        deleteFromJsonFile(path.resolve(__dirname, "../data/bookings.json"), { id: bookingId })
+        deleteFromJsonFile(path.resolve(__dirname, "../data/bookings.json"), { _id: bookingId })
         return { id: bookingId };
     }
 }

@@ -21,7 +21,7 @@ var roomSchema = new Schema({
     required: true
   },
   amenities: {
-    type: String,
+    type: [String],
     required: true
   },
   images: {
