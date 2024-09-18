@@ -171,7 +171,7 @@ function concatenateDefaultUsers() {
     "status": "inactive",
     "position": "manager"
   };
-  users.concat([defaultDeveloper, defaultAdmin, defaultDuck, defaultTest]);
+  users = users.concat([defaultDeveloper, defaultAdmin, defaultDuck, defaultTest]);
 }
 main()["catch"](function (err) {
   return console.log(err);
@@ -192,28 +192,26 @@ function _main() {
           return _mongoose["default"].connect(mongoUri);
         case 5:
           console.log("Debug: Should be connected?");
-          _context.next = 8;
-          return concatenateDefaultUsers();
-        case 8:
-          _context.next = 10;
+          concatenateDefaultUsers();
+          _context.next = 9;
           return createUsers();
-        case 10:
-          _context.next = 12;
+        case 9:
+          _context.next = 11;
           return createContacts();
-        case 12:
-          _context.next = 14;
+        case 11:
+          _context.next = 13;
           return createRooms();
-        case 14:
+        case 13:
           book = new BookingGenerator(rooms);
           bookings = _faker.faker.helpers.multiple(book.createRandomBooking, {
             count: 20
           });
-          _context.next = 18;
+          _context.next = 17;
           return createBookings();
-        case 18:
+        case 17:
           console.log("Debug: Closing mongoose");
           _mongoose["default"].connection.close();
-        case 20:
+        case 19:
         case "end":
           return _context.stop();
       }

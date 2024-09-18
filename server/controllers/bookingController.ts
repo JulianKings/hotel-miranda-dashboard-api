@@ -8,17 +8,20 @@ export default function (passport)
 
     bookingController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const bookingService = new BookingService();
-        res.status(200).json(bookingService.loadAll());
+        const allBookingsResult = await bookingService.loadAll();
+        res.status(200).json(allBookingsResult);
     }));
 
     bookingController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const bookingService = new BookingService();
-        res.status(201).json(bookingService.updateBooking(req.body));
+        const bookingUpdate = await bookingService.updateBooking(req.body);
+        res.status(201).json(bookingUpdate);
     }));
 
     bookingController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const bookingService = new BookingService();
-        const bookingInformation = bookingService.loadBookingById(req.params.id);
+        const bookingInformation = await bookingService.loadBookingById(req.params.id);
+        
         if(bookingInformation !== null)
         {
             res.status(200).json(bookingInformation);
@@ -29,9 +32,12 @@ export default function (passport)
 
     bookingController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const bookingService = new BookingService();
-        if(bookingService.loadBookingById(req.params.id) !== null)
+        const bookingInformation = await bookingService.loadBookingById(req.params.id);
+        
+        if(bookingInformation !== null)
         {
-            res.status(201).json(bookingService.updateBooking(req.body));
+            const updateResult = await bookingService.updateBooking(req.body);
+            res.status(201).json(updateResult);
         } else {
             res.status(400).json({ error: 'Invalid Booking' })
         }
@@ -39,9 +45,12 @@ export default function (passport)
 
     bookingController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const bookingService = new BookingService();
-        if(bookingService.loadBookingById(req.params.id) !== null)
+        const bookingInformation = await bookingService.loadBookingById(req.params.id);
+        
+        if(bookingInformation !== null)
         {
-            res.status(201).json(bookingService.deleteBooking(req.params.id));
+            const deleteResult = await bookingService.deleteBooking(req.params.id);
+            res.status(201).json(deleteResult);
         } else {
             res.status(400).json({ error: 'Invalid Booking' })
         }

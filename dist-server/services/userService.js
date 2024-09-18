@@ -82,16 +82,16 @@ var UserService = exports.UserService = /*#__PURE__*/function () {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               _context3.next = 2;
-              return _user["default"].find({
+              return _user["default"].findOne({
                 name: name
-              }).exec();
+              }).lean().exec();
             case 2:
               userById = _context3.sent;
-              if (!(userById.length > 0)) {
+              if (!(userById !== null)) {
                 _context3.next = 7;
                 break;
               }
-              return _context3.abrupt("return", userById[0]);
+              return _context3.abrupt("return", userById);
             case 7:
               return _context3.abrupt("return", null);
             case 8:

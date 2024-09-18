@@ -1,33 +1,41 @@
 import path from 'path';
 import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
 import { ApiBookingInterface } from '../interfaces/bookings';
+import bookingModel from '../models/bookings';
 
 export class BookingService {
-    loadAll(): ApiBookingInterface[] {
-        return readJsonFile(path.resolve(__dirname, "../data/bookings.json"));
+    async loadAll(): Promise<ApiBookingInterface[]> {
+        const allBookings = await bookingModel.find().exec();
+        return allBookings;
     }
 
-    loadBookingById(id: string): ApiBookingInterface | null {
-        const bookings = readJsonFile(path.resolve(__dirname, "../data/bookings.json"));
-        const booking = bookings.filter((bookingElement) => bookingElement.id === id);
+    async loadBookingById(id: string): Promise<ApiBookingInterface | null> {
+        const bookingById = await bookingModel.findById(id).exec();
 
-        if(booking.length > 0)
+        if(bookingById !== null)
         {
-            return booking[0];
+            return bookingById
         } else {
             return null;
         }
     }
 
-    updateBooking(bookingObject: ApiBookingInterface)
+    async updateBooking(bookingObject: ApiBookingInterface)
     {
-        updateJsonFile(path.resolve(__dirname, "../data/bookings.json"), bookingObject)
-        return bookingObject;
+        if(bookingObject._id === undefined)
+        {
+            const newBooking = new bookingModel(bookingObject);
+            const bookingResult = await newBooking.save();
+            return bookingResult;
+        } else {
+            const updatedBooking = await bookingModel.findByIdAndUpdate(bookingObject._id, bookingObject, {});
+            return updatedBooking;
+        }
     }
 
-    deleteBooking(bookingId: string)
+    async deleteBooking(bookingId: string)
     {
-        deleteFromJsonFile(path.resolve(__dirname, "../data/bookings.json"), { _id: bookingId })
-        return { id: bookingId };
+        const deleteBooking = await bookingModel.findByIdAndDelete(bookingId);
+        return { _id: bookingId };
     }
 }

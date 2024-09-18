@@ -16,13 +16,17 @@ function _default(passport) {
   var contactController = (0, _express.Router)();
   contactController.get('/', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res, next) {
-      var contactService;
+      var contactService, allContactsResult;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             contactService = new _contactService.ContactService();
-            res.status(200).json(contactService.loadAll());
-          case 2:
+            _context.next = 3;
+            return contactService.loadAll();
+          case 3:
+            allContactsResult = _context.sent;
+            res.status(200).json(allContactsResult);
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -34,13 +38,17 @@ function _default(passport) {
   }()));
   contactController.post('/', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
-      var contactService;
+      var contactService, contactUpdate;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             contactService = new _contactService.ContactService();
-            res.status(201).json(contactService.updateContact(req.body));
-          case 2:
+            _context2.next = 3;
+            return contactService.updateContact(req.body);
+          case 3:
+            contactUpdate = _context2.sent;
+            res.status(201).json(contactUpdate);
+          case 5:
           case "end":
             return _context2.stop();
         }
@@ -57,7 +65,10 @@ function _default(passport) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
             contactService = new _contactService.ContactService();
-            contactInformation = contactService.loadContactById(req.params.id);
+            _context3.next = 3;
+            return contactService.loadContactById(req.params.id);
+          case 3:
+            contactInformation = _context3.sent;
             if (contactInformation !== null) {
               res.status(200).json(contactInformation);
             } else {
@@ -65,7 +76,7 @@ function _default(passport) {
                 error: 'Invalid Contact'
               });
             }
-          case 3:
+          case 5:
           case "end":
             return _context3.stop();
         }
@@ -77,19 +88,31 @@ function _default(passport) {
   }()));
   contactController.put('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
-      var contactService;
+      var contactService, contactInformation, updateResult;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             contactService = new _contactService.ContactService();
-            if (contactService.loadContactById(req.params.id) !== null) {
-              res.status(201).json(contactService.updateContact(req.body));
-            } else {
-              res.status(400).json({
-                error: 'Invalid Contact'
-              });
+            _context4.next = 3;
+            return contactService.loadContactById(req.params.id);
+          case 3:
+            contactInformation = _context4.sent;
+            if (!(contactInformation !== null)) {
+              _context4.next = 11;
+              break;
             }
-          case 2:
+            _context4.next = 7;
+            return contactService.updateContact(req.body);
+          case 7:
+            updateResult = _context4.sent;
+            res.status(201).json(updateResult);
+            _context4.next = 12;
+            break;
+          case 11:
+            res.status(400).json({
+              error: 'Invalid Contact'
+            });
+          case 12:
           case "end":
             return _context4.stop();
         }
@@ -101,19 +124,31 @@ function _default(passport) {
   }()));
   contactController["delete"]('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res, next) {
-      var contactService;
+      var contactService, contactInformation, deleteResult;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
             contactService = new _contactService.ContactService();
-            if (contactService.loadContactById(req.params.id) !== null) {
-              res.status(201).json(contactService.deleteContact(req.params.id));
-            } else {
-              res.status(400).json({
-                error: 'Invalid Contact'
-              });
+            _context5.next = 3;
+            return contactService.loadContactById(req.params.id);
+          case 3:
+            contactInformation = _context5.sent;
+            if (!(contactInformation !== null)) {
+              _context5.next = 11;
+              break;
             }
-          case 2:
+            _context5.next = 7;
+            return contactService.deleteContact(req.params.id);
+          case 7:
+            deleteResult = _context5.sent;
+            res.status(201).json(deleteResult);
+            _context5.next = 12;
+            break;
+          case 11:
+            res.status(400).json({
+              error: 'Invalid Contact'
+            });
+          case 12:
           case "end":
             return _context5.stop();
         }

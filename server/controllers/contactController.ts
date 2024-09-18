@@ -8,17 +8,20 @@ export default function (passport)
 
     contactController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const contactService = new ContactService();
-        res.status(200).json(contactService.loadAll());
+        const allContactsResult = await contactService.loadAll();
+        res.status(200).json(allContactsResult);
     }));
 
     contactController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const contactService = new ContactService();
-        res.status(201).json(contactService.updateContact(req.body));
+        const contactUpdate = await contactService.updateContact(req.body);
+        res.status(201).json(contactUpdate);
     }));
 
     contactController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const contactService = new ContactService();
-        const contactInformation = contactService.loadContactById(req.params.id);
+        const contactInformation = await contactService.loadContactById(req.params.id);
+        
         if(contactInformation !== null)
         {
             res.status(200).json(contactInformation);
@@ -29,9 +32,12 @@ export default function (passport)
 
     contactController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const contactService = new ContactService();
-        if(contactService.loadContactById(req.params.id) !== null)
+        const contactInformation = await contactService.loadContactById(req.params.id);
+
+        if(contactInformation !== null)
         {
-            res.status(201).json(contactService.updateContact(req.body));
+            const updateResult = await contactService.updateContact(req.body);
+            res.status(201).json(updateResult);
         } else {
             res.status(400).json({ error: 'Invalid Contact' })
         }
@@ -39,9 +45,12 @@ export default function (passport)
 
     contactController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const contactService = new ContactService();
-        if(contactService.loadContactById(req.params.id) !== null)
+        const contactInformation = await contactService.loadContactById(req.params.id);
+
+        if(contactInformation !== null)
         {
-            res.status(201).json(contactService.deleteContact(req.params.id));
+            const deleteResult = await contactService.deleteContact(req.params.id);
+            res.status(201).json(deleteResult);
         } else {
             res.status(400).json({ error: 'Invalid Contact' })
         }

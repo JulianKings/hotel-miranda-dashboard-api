@@ -21,11 +21,11 @@ export class UserService {
     }
 
     async loadUserByName(name: string): Promise<ApiUserInterface | null> {
-        const userById = await userModel.find({ name: name }).exec();
+        const userById = await userModel.findOne({ name: name }).lean().exec();
 
-        if(userById.length > 0)
+        if(userById !== null)
         {
-            return userById[0];
+            return userById;
         } else {
             return null;
         }

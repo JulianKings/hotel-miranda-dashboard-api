@@ -16,13 +16,17 @@ function _default(passport) {
   var userController = (0, _express.Router)();
   userController.get('/', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res, next) {
-      var userService;
+      var userService, allUsersResult;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             userService = new _userService.UserService();
-            res.status(200).json(userService.loadAll());
-          case 2:
+            _context.next = 3;
+            return userService.loadAll();
+          case 3:
+            allUsersResult = _context.sent;
+            res.status(200).json(allUsersResult);
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -58,7 +62,7 @@ function _default(passport) {
   }()));
   userController.post('/', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
-      var userService, userList;
+      var userService, userUpdate;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
@@ -66,8 +70,8 @@ function _default(passport) {
             _context3.next = 3;
             return userService.updateUser(req.body);
           case 3:
-            userList = _context3.sent;
-            res.status(201).json(userList);
+            userUpdate = _context3.sent;
+            res.status(201).json(userUpdate);
           case 5:
           case "end":
             return _context3.stop();

@@ -1,33 +1,41 @@
 import path from 'path';
 import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
 import { ApiRoomInterface } from '../interfaces/room';
+import roomModel from '../models/room';
 
 export class RoomService {
-    loadAll(): ApiRoomInterface[] {
-        return readJsonFile(path.resolve(__dirname, "../data/room.json"));
+    async loadAll(): Promise<ApiRoomInterface[]> {
+        const allRooms = await roomModel.find().exec();
+        return allRooms;
     }
 
-    loadRoomById(id: string): ApiRoomInterface | null {
-        const rooms = readJsonFile(path.resolve(__dirname, "../data/room.json"));
-        const room = rooms.filter((roomElement) => roomElement.id === id);
+    async loadRoomById(id: string): Promise<ApiRoomInterface | null> {
+        const roomById = await roomModel.findById(id).exec();
 
-        if(room.length > 0)
+        if(roomById !== null)
         {
-            return room[0];
+            return roomById
         } else {
             return null;
         }
     }
 
-    updateRoom(roomObject: ApiRoomInterface)
+    async updateRoom(roomObject: ApiRoomInterface)
     {
-        updateJsonFile(path.resolve(__dirname, "../data/room.json"), roomObject)
-        return roomObject;
+        if(roomObject._id === undefined)
+        {
+            const newRoom = new roomModel(roomObject);
+            const roomResult = await newRoom.save();
+            return roomResult;
+        } else {
+            const updatedRoom = await roomModel.findByIdAndUpdate(roomObject._id, roomObject, {});
+            return updatedRoom;
+        }
     }
 
-    deleteRoom(roomId: string)
+    async deleteRoom(roomId: string)
     {
-        deleteFromJsonFile(path.resolve(__dirname, "../data/room.json"), { id: roomId })
-        return { id: roomId };
+        const deleteRoom = await roomModel.findByIdAndDelete(roomId);
+        return { _id: roomId };
     }
 }

@@ -77,7 +77,7 @@ class BookingGenerator
 	}
 }
   
-const users: ApiUserInterface[] = faker.helpers.multiple(createRandomUser, { count: 20, });
+let users: ApiUserInterface[] = faker.helpers.multiple(createRandomUser, { count: 20, });
 const contacts: ApiContactInterface[] = faker.helpers.multiple(createRandomContact, { count: 20, });
 const rooms: ApiRoomInterface[] = faker.helpers.multiple(createRandomRoom, { count: 20, });
 let bookings: ApiBookingInterface[] = [];
@@ -141,7 +141,7 @@ function concatenateDefaultUsers(): void
 		"position": "manager"
 	}
 
-	users.concat([ defaultDeveloper, defaultAdmin, defaultDuck, defaultTest]);
+	users = users.concat([ defaultDeveloper, defaultAdmin, defaultDuck, defaultTest]);
 }
 
 main().catch((err) => console.log(err));
@@ -155,7 +155,7 @@ async function main() {
 	await mongoose.connect(mongoUri);
 	console.log("Debug: Should be connected?");
 
-	await concatenateDefaultUsers();
+	concatenateDefaultUsers();
 	await createUsers();
 	await createContacts();
 	await createRooms();

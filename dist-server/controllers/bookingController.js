@@ -16,13 +16,17 @@ function _default(passport) {
   var bookingController = (0, _express.Router)();
   bookingController.get('/', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res, next) {
-      var bookingService;
+      var bookingService, allBookingsResult;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             bookingService = new _bookingServices.BookingService();
-            res.status(200).json(bookingService.loadAll());
-          case 2:
+            _context.next = 3;
+            return bookingService.loadAll();
+          case 3:
+            allBookingsResult = _context.sent;
+            res.status(200).json(allBookingsResult);
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -34,13 +38,17 @@ function _default(passport) {
   }()));
   bookingController.post('/', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
-      var bookingService;
+      var bookingService, bookingUpdate;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             bookingService = new _bookingServices.BookingService();
-            res.status(201).json(bookingService.updateBooking(req.body));
-          case 2:
+            _context2.next = 3;
+            return bookingService.updateBooking(req.body);
+          case 3:
+            bookingUpdate = _context2.sent;
+            res.status(201).json(bookingUpdate);
+          case 5:
           case "end":
             return _context2.stop();
         }
@@ -57,7 +65,10 @@ function _default(passport) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
             bookingService = new _bookingServices.BookingService();
-            bookingInformation = bookingService.loadBookingById(req.params.id);
+            _context3.next = 3;
+            return bookingService.loadBookingById(req.params.id);
+          case 3:
+            bookingInformation = _context3.sent;
             if (bookingInformation !== null) {
               res.status(200).json(bookingInformation);
             } else {
@@ -65,7 +76,7 @@ function _default(passport) {
                 error: 'Invalid Booking'
               });
             }
-          case 3:
+          case 5:
           case "end":
             return _context3.stop();
         }
@@ -77,19 +88,31 @@ function _default(passport) {
   }()));
   bookingController.put('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
-      var bookingService;
+      var bookingService, bookingInformation, updateResult;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             bookingService = new _bookingServices.BookingService();
-            if (bookingService.loadBookingById(req.params.id) !== null) {
-              res.status(201).json(bookingService.updateBooking(req.body));
-            } else {
-              res.status(400).json({
-                error: 'Invalid Booking'
-              });
+            _context4.next = 3;
+            return bookingService.loadBookingById(req.params.id);
+          case 3:
+            bookingInformation = _context4.sent;
+            if (!(bookingInformation !== null)) {
+              _context4.next = 11;
+              break;
             }
-          case 2:
+            _context4.next = 7;
+            return bookingService.updateBooking(req.body);
+          case 7:
+            updateResult = _context4.sent;
+            res.status(201).json(updateResult);
+            _context4.next = 12;
+            break;
+          case 11:
+            res.status(400).json({
+              error: 'Invalid Booking'
+            });
+          case 12:
           case "end":
             return _context4.stop();
         }
@@ -101,19 +124,31 @@ function _default(passport) {
   }()));
   bookingController["delete"]('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res, next) {
-      var bookingService;
+      var bookingService, bookingInformation, deleteResult;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
             bookingService = new _bookingServices.BookingService();
-            if (bookingService.loadBookingById(req.params.id) !== null) {
-              res.status(201).json(bookingService.deleteBooking(req.params.id));
-            } else {
-              res.status(400).json({
-                error: 'Invalid Booking'
-              });
+            _context5.next = 3;
+            return bookingService.loadBookingById(req.params.id);
+          case 3:
+            bookingInformation = _context5.sent;
+            if (!(bookingInformation !== null)) {
+              _context5.next = 11;
+              break;
             }
-          case 2:
+            _context5.next = 7;
+            return bookingService.deleteBooking(req.params.id);
+          case 7:
+            deleteResult = _context5.sent;
+            res.status(201).json(deleteResult);
+            _context5.next = 12;
+            break;
+          case 11:
+            res.status(400).json({
+              error: 'Invalid Booking'
+            });
+          case 12:
           case "end":
             return _context5.stop();
         }

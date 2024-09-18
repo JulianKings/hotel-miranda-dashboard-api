@@ -8,7 +8,8 @@ export default function (passport)
 
     userController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const userService = new UserService();
-        res.status(200).json(userService.loadAll());
+        const allUsersResult = await userService.loadAll();
+        res.status(200).json(allUsersResult);
     }));
 
 	userController.get('/sso', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -22,8 +23,8 @@ export default function (passport)
 
 	userController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const userService = new UserService();
-        const userList = await userService.updateUser(req.body);
-        res.status(201).json(userList);
+        const userUpdate = await userService.updateUser(req.body);
+        res.status(201).json(userUpdate);
     }));
 
 	userController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
