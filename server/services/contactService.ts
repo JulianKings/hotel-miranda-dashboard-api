@@ -1,34 +1,41 @@
-import { ApiContactInterface } from "../interfaces/apiManagement";
-
 import path from 'path';
 import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
+import { ApiContactInterface } from '../interfaces/contact';
+import contactModel from '../models/contact';
 
 export class ContactService {
-    loadAll(): ApiContactInterface[] {
-        return readJsonFile(path.resolve(__dirname, "../data/contact.json"));
+    async loadAll(): Promise<ApiContactInterface[]> {
+        const allContacts = await contactModel.find().exec();
+        return allContacts;
     }
 
-    loadContactById(id: string): ApiContactInterface | null {
-        const contacts = readJsonFile(path.resolve(__dirname, "../data/contact.json"));
-        const contact = contacts.filter((contactElement) => contactElement.id === id);
+    async loadContactById(id: string): Promise<ApiContactInterface | null> {
+        const contactById = await contactModel.findById(id).exec();
 
-        if(contact.length > 0)
+        if(contactById !== null)
         {
-            return contact[0];
+            return contactById
         } else {
             return null;
         }
     }
 
-    updateContact(contactObject: ApiContactInterface)
+    async updateContact(contactObject: ApiContactInterface)
     {
-        updateJsonFile(path.resolve(__dirname, "../data/contact.json"), contactObject)
-        return contactObject;
+        if(contactObject._id === undefined)
+        {
+            const newContact = new contactModel(contactObject);
+            const contactResult = await newContact.save();
+            return contactResult;
+        } else {
+            const updatedContact = await contactModel.findByIdAndUpdate(contactObject._id, contactObject, {});
+            return updatedContact;
+        }
     }
 
-    deleteContact(contactId: string)
+    async deleteContact(contactId: string)
     {
-        deleteFromJsonFile(path.resolve(__dirname, "../data/contact.json"), { id: contactId })
-        return { id: contactId };
+        const deleteContact = await contactModel.findByIdAndDelete(contactId);
+        return { _id: contactId };
     }
 }

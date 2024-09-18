@@ -8,17 +8,19 @@ export default function (passport)
 
     roomController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const roomService = new RoomService();
-        res.status(200).json(roomService.loadAll());
+        const allRoomsResult = await roomService.loadAll();
+        res.status(200).json(allRoomsResult);
     }));
 
     roomController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const roomService = new RoomService();
-        res.status(201).json(roomService.updateRoom(req.body));
+        const roomUpdate = await roomService.updateRoom(req.body);
+        res.status(201).json(roomUpdate);
     }));
 
     roomController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const roomService = new RoomService();
-        const roomInformation = roomService.loadRoomById(req.params.id);
+        const roomInformation = await roomService.loadRoomById(req.params.id);
         if(roomInformation !== null)
         {
             res.status(200).json(roomInformation);
@@ -29,9 +31,12 @@ export default function (passport)
 
     roomController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const roomService = new RoomService();
-        if(roomService.loadRoomById(req.params.id) !== null)
+        const roomInformation = await roomService.loadRoomById(req.params.id);
+        
+        if(roomInformation !== null)
         {
-            res.status(201).json(roomService.updateRoom(req.body));
+            const updateResult = await roomService.updateRoom(req.body);
+            res.status(201).json(updateResult);
         } else {
             res.status(400).json({ error: 'Invalid Room' })
         }
@@ -39,9 +44,12 @@ export default function (passport)
 
     roomController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const roomService = new RoomService();
-        if(roomService.loadRoomById(req.params.id) !== null)
+        const roomInformation = await roomService.loadRoomById(req.params.id);
+        
+        if(roomInformation !== null)
         {
-            res.status(201).json(roomService.deleteRoom(req.params.id));
+            const deleteResult = await roomService.deleteRoom(req.params.id);
+            res.status(201).json(deleteResult);
         } else {
             res.status(400).json({ error: 'Invalid Room' })
         }

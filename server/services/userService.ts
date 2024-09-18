@@ -1,46 +1,52 @@
-import { ApiUserInterface } from "../interfaces/apiManagement";
-
 import path from 'path';
 import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
+import { ApiUserInterface } from '../interfaces/user';
+import userModel from '../models/user';
 
 export class UserService {
-    loadAll(): ApiUserInterface[] {
-        return readJsonFile(path.resolve(__dirname, "../data/user.json"));
+    async loadAll(): Promise<ApiUserInterface[]> {
+        const allUsers = await userModel.find().exec();
+        return allUsers;
     }
 
-    loadUserById(id: string): ApiUserInterface | null {
-        const users = readJsonFile(path.resolve(__dirname, "../data/user.json"));
-        const user = users.filter((userElement) => userElement.id === id);
+    async loadUserById(id: string): Promise<ApiUserInterface | null> {
+        const userById = await userModel.findById(id).exec();
 
-        if(user.length > 0)
+        if(userById !== null)
         {
-            return user[0];
+            return userById
         } else {
             return null;
         }
     }
 
-    loadUserByName(name: string): ApiUserInterface | null {
-        const users = readJsonFile(path.resolve(__dirname, "../data/user.json"));
-        const user = users.filter((userElement) => userElement.name === name);
+    async loadUserByName(name: string): Promise<ApiUserInterface | null> {
+        const userById = await userModel.findOne({ name: name }).lean().exec();
 
-        if(user.length > 0)
+        if(userById !== null)
         {
-            return user[0];
+            return userById;
         } else {
             return null;
         }
     }
 
-    updateUser(userObject: ApiUserInterface)
+    async updateUser(userObject: ApiUserInterface)
     {
-        updateJsonFile(path.resolve(__dirname, "../data/user.json"), userObject)
-        return userObject;
+        if(userObject._id === undefined)
+        {
+            const newUser = new userModel(userObject);
+            const userResult = await newUser.save();
+            return userResult;
+        } else {
+            const updatedUser = await userModel.findByIdAndUpdate(userObject._id, userObject, {});
+            return updatedUser;
+        }
     }
 
-    deleteUser(userId: string)
+    async deleteUser(userId: string)
     {
-        deleteFromJsonFile(path.resolve(__dirname, "../data/user.json"), { id: userId })
-        return { id: userId };
+        const deleteUser = await userModel.findByIdAndDelete(userId);
+        return { _id: userId };
     }
 }

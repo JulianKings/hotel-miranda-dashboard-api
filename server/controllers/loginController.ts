@@ -58,7 +58,7 @@ export default function(passport) {
                                 if (error) return next(error);
                     
                                 const userBody = { ...user,
-                                    password: undefined
+                                        password: undefined
                                     };
                                 const token = jwt.sign({ user: userBody }, req.app.settings.jwt_secret_password, { expiresIn: '2h' });
                     

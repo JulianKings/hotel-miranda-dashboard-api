@@ -16,13 +16,17 @@ function _default(passport) {
   var userController = (0, _express.Router)();
   userController.get('/', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res, next) {
-      var userService;
+      var userService, allUsersResult;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             userService = new _userService.UserService();
-            res.status(200).json(userService.loadAll());
-          case 2:
+            _context.next = 3;
+            return userService.loadAll();
+          case 3:
+            allUsersResult = _context.sent;
+            res.status(200).json(allUsersResult);
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -37,9 +41,15 @@ function _default(passport) {
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
-            res.json({
-              user: req.user
-            });
+            if (req.user !== null) {
+              res.status(200).json({
+                user: req.user
+              });
+            } else {
+              res.status(400).json({
+                error: 'Invalid user logged in'
+              });
+            }
           case 1:
           case "end":
             return _context2.stop();
@@ -52,13 +62,17 @@ function _default(passport) {
   }()));
   userController.post('/', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
-      var userService;
+      var userService, userUpdate;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
             userService = new _userService.UserService();
-            res.status(201).json(userService.updateUser(req.body));
-          case 2:
+            _context3.next = 3;
+            return userService.updateUser(req.body);
+          case 3:
+            userUpdate = _context3.sent;
+            res.status(201).json(userUpdate);
+          case 5:
           case "end":
             return _context3.stop();
         }
@@ -70,13 +84,23 @@ function _default(passport) {
   }()));
   userController.get('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
-      var userService;
+      var userService, userInformation;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             userService = new _userService.UserService();
-            res.status(200).json(userService.loadUserById(req.params.id));
-          case 2:
+            _context4.next = 3;
+            return userService.loadUserById(req.params.id);
+          case 3:
+            userInformation = _context4.sent;
+            if (userInformation !== null) {
+              res.status(200).json(userInformation);
+            } else {
+              res.status(400).json({
+                error: 'Invalid User'
+              });
+            }
+          case 5:
           case "end":
             return _context4.stop();
         }
@@ -88,15 +112,31 @@ function _default(passport) {
   }()));
   userController.put('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res, next) {
-      var userService;
+      var userService, userInformation, updateUser;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
             userService = new _userService.UserService();
-            if (userService.loadUserById(req.params.id) !== null) {
-              res.status(201).json(userService.updateUser(req.body));
+            _context5.next = 3;
+            return userService.loadUserById(req.params.id);
+          case 3:
+            userInformation = _context5.sent;
+            if (!(userInformation !== null)) {
+              _context5.next = 11;
+              break;
             }
-          case 2:
+            _context5.next = 7;
+            return userService.updateUser(req.body);
+          case 7:
+            updateUser = _context5.sent;
+            res.status(201).json(updateUser);
+            _context5.next = 12;
+            break;
+          case 11:
+            res.status(400).json({
+              error: 'Invalid User'
+            });
+          case 12:
           case "end":
             return _context5.stop();
         }
@@ -108,15 +148,31 @@ function _default(passport) {
   }()));
   userController["delete"]('/:id', (0, _expressAsyncHandler["default"])(/*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res, next) {
-      var userService;
+      var userService, userInformation, deleteUser;
       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
         while (1) switch (_context6.prev = _context6.next) {
           case 0:
             userService = new _userService.UserService();
-            if (userService.loadUserById(req.params.id) !== null) {
-              res.status(201).json(userService.deleteUser(req.params.id));
+            _context6.next = 3;
+            return userService.loadUserById(req.params.id);
+          case 3:
+            userInformation = _context6.sent;
+            if (!(userInformation !== null)) {
+              _context6.next = 11;
+              break;
             }
-          case 2:
+            _context6.next = 7;
+            return userService.deleteUser(req.params.id);
+          case 7:
+            deleteUser = _context6.sent;
+            res.status(201).json(deleteUser);
+            _context6.next = 12;
+            break;
+          case 11:
+            res.status(400).json({
+              error: 'Invalid User'
+            });
+          case 12:
           case "end":
             return _context6.stop();
         }
