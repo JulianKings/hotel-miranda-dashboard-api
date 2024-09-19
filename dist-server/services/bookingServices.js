@@ -28,7 +28,7 @@ var BookingService = exports.BookingService = /*#__PURE__*/function () {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return _bookings["default"].find().exec();
+              return _bookings["default"].find().populate('room').exec();
             case 2:
               allBookings = _context.sent;
               return _context.abrupt("return", allBookings);
@@ -52,7 +52,7 @@ var BookingService = exports.BookingService = /*#__PURE__*/function () {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return _bookings["default"].findById(id).exec();
+              return _bookings["default"].findById(id).populate('room').exec();
             case 2:
               bookingById = _context2.sent;
               if (!(bookingById !== null)) {

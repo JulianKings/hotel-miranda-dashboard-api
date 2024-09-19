@@ -1,5 +1,3 @@
-import path from 'path';
-import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
 import { ApiContactInterface } from '../interfaces/contact';
 import contactModel from '../models/contact';
 
