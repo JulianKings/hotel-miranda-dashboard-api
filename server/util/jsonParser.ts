@@ -1,4 +1,4 @@
-import fs from 'fs'; 
+/*import fs from 'fs'; 
 import { ApiAbstractInterface } from '../interfaces/apiManagement';
 
 export function readJsonFile(filePath: string)
@@ -73,4 +73,4 @@ export function deleteFromJsonFile(filePath: string, newData: ApiAbstractInterfa
             });
         }
     });
-}
+}*/

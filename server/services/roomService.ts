@@ -1,5 +1,3 @@
-import path from 'path';
-import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
 import { ApiRoomInterface } from '../interfaces/room';
 import roomModel from '../models/room';
 

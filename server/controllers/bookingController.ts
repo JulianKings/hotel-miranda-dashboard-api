@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { BookingService } from "../services/bookingServices";
+import { PassportStatic } from "passport";
 
-export default function (passport)
+export default function (passport: PassportStatic)
 {
     const bookingController = Router();
 

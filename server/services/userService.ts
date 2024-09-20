@@ -1,5 +1,3 @@
-import path from 'path';
-import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
 import { ApiUserInterface } from '../interfaces/user';
 import userModel from '../models/user';
 

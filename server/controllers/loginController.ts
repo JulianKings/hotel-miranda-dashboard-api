@@ -3,8 +3,9 @@ import { NextFunction, Request, Response, Router } from "express";
 
 import jwt from 'jsonwebtoken';
 import { body, validationResult } from "express-validator";
+import { PassportStatic } from "passport";
 
-export default function(passport) {
+export default function(passport: PassportStatic) {
 
     const loginController = Router();
 
@@ -33,7 +34,7 @@ export default function(passport) {
             } else {
                 passport.authenticate(
                     'login',
-                    async (err, user, info) => {
+                    async (err: any, user: Express.User, info: any) => {
                         try {
                             if (err) {
                                 const error = new Error('An error occurred.');

@@ -167,7 +167,7 @@ async function main() {
 	mongoose.connection.close();
 }
 
-async function createUser(user, index)
+async function createUser(user: ApiUserInterface, index: number)
 {
 	const userMod = new userModel(user);
 	await userMod.save();
@@ -186,7 +186,7 @@ async function createUsers() {
 	await Promise.all(concatPromise);
 }
 
-async function createContact(contact, index)
+async function createContact(contact: ApiContactInterface, index: number)
 {
 	const contactMod = new contactModel(contact);
 	await contactMod.save();
@@ -205,7 +205,7 @@ async function createContacts() {
 	await Promise.all(concatPromise);
 }
 
-async function createRoom(room, index)
+async function createRoom(room: ApiRoomInterface, index: number)
 {
 	const roomMod = new roomModel(room);
 	await roomMod.save();
@@ -224,7 +224,7 @@ async function createRooms() {
 	await Promise.all(concatPromise);
 }
 
-async function createBooking(booking, index)
+async function createBooking(booking: ApiBookingInterface, index: number)
 {
 	const bookingMod = new bookingModel(booking);
 	await bookingMod.save();

@@ -1,16 +1,14 @@
-import path from 'path';
-import { deleteFromJsonFile, readJsonFile, updateJsonFile } from "../util/jsonParser";
 import { ApiBookingInterface } from '../interfaces/bookings';
 import bookingModel from '../models/bookings';
 
 export class BookingService {
     async loadAll(): Promise<ApiBookingInterface[]> {
-        const allBookings = await bookingModel.find().exec();
+        const allBookings = await bookingModel.find().populate('room').exec();
         return allBookings;
     }
 
     async loadBookingById(id: string): Promise<ApiBookingInterface | null> {
-        const bookingById = await bookingModel.findById(id).exec();
+        const bookingById = await bookingModel.findById(id).populate('room').exec();
 
         if(bookingById !== null)
         {
