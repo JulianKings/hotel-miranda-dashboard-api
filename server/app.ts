@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import dotenv from "dotenv";
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
@@ -18,7 +18,9 @@ import bookingController from './controllers/bookingController';
 import loginController from './controllers/loginController';
 
 import { applyPassportMiddleware } from './middleware/auth';
+import serverless from 'serverless-http';
 
+dotenv.config();
 const app = express();
 
 mongoose.set("strictQuery", false);
@@ -45,6 +47,20 @@ app.use(passport.session());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+const bufferToJSONMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (req.body.length > 0 && req.body instanceof Buffer) {
+    try {
+      req.body = JSON.parse(req.body.toString());
+    } catch (err) {
+      return res.status(400).json({ body: req.body, length: req.body.length, error: 'Invalid JSON data' });
+    }
+  }
+
+  next();
+};
+
+app.use(bufferToJSONMiddleware)
+
 const indexRouterHandler = indexController();
 app.use('/', indexRouterHandler);
 const userRouterHandler = usersController(passport);
@@ -60,4 +76,8 @@ app.use('/login', loginRouterHandler);
 
 applyPassportMiddleware(passport);
 
-export default app;
+//app.listen(3000);
+
+//console.log('server listening on port 3000');
+
+export const handler = serverless(app);
