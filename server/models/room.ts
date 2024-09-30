@@ -11,7 +11,8 @@ const roomSchema = new Schema<ApiRoomInterface>({
     images: { type: String, required: true },
     price: { type: Number, required: true },
     offer: { type: Number, required: true },
-    status: { type: String, required: true }
+    status: { type: String, required: true },
+    description: { type: String, required: true }
   });
 
 const roomModel = mongoose.model<ApiRoomInterface>("room", roomSchema);
