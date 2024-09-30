@@ -59,7 +59,7 @@ const bufferToJSONMiddleware = (req: express.Request, res: express.Response, nex
   next();
 };
 
-app.use(bufferToJSONMiddleware)
+//app.use(bufferToJSONMiddleware)
 
 const indexRouterHandler = indexController();
 app.use('/', indexRouterHandler);
@@ -76,8 +76,8 @@ app.use('/login', loginRouterHandler);
 
 applyPassportMiddleware(passport);
 
-//app.listen(3000);
+app.listen(3000);
 
-//console.log('server listening on port 3000');
+console.log('server listening on port 3000');
 
-export const handler = serverless(app);
+//export const handler = serverless(app);
