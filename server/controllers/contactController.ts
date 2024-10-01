@@ -2,25 +2,26 @@ import { NextFunction, Request, Response, Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { ContactService } from "../services/contactService";
 import { PassportStatic } from "passport";
+import mysql from 'mysql2/promise';
 
-export default function (passport: PassportStatic)
+export default function (connection: mysql.Connection, passport: PassportStatic)
 {
     const contactController = Router();
 
     contactController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const contactService = new ContactService();
+        const contactService = new ContactService(connection);
         const allContactsResult = await contactService.loadAll();
         res.status(200).json(allContactsResult);
     }));
 
     contactController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const contactService = new ContactService();
+        const contactService = new ContactService(connection);
         const contactUpdate = await contactService.updateContact(req.body);
         res.status(201).json(contactUpdate);
     }));
 
     contactController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const contactService = new ContactService();
+        const contactService = new ContactService(connection);
         const contactInformation = await contactService.loadContactById(req.params.id);
         
         if(contactInformation !== null)
@@ -32,7 +33,7 @@ export default function (passport: PassportStatic)
     }));
 
     contactController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const contactService = new ContactService();
+        const contactService = new ContactService(connection);
         const contactInformation = await contactService.loadContactById(req.params.id);
 
         if(contactInformation !== null)
@@ -45,7 +46,7 @@ export default function (passport: PassportStatic)
     }));
 
     contactController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const contactService = new ContactService();
+        const contactService = new ContactService(connection);
         const contactInformation = await contactService.loadContactById(req.params.id);
 
         if(contactInformation !== null)
