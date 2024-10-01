@@ -4,15 +4,16 @@ import { Strategy as jwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 import { UserService } from '../services/userService';
 import { PassportStatic } from 'passport';
+import mysql from 'mysql2/promise';
 const LocalJWTStrategy = jwtStrategy;
 const LocalExtractJWT = ExtractJwt;
 
-export const applyPassportMiddleware = (passport: PassportStatic) =>
+export const applyPassportMiddleware = (passport: PassportStatic, connection: mysql.Connection) =>
 {
     const nameField = 'username';
     const pwdField = 'password';
 
-    const userService = new UserService();
+    const userService = new UserService(connection);
 
     passport.use(
         'login',

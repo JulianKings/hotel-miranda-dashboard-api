@@ -2,13 +2,14 @@ import { NextFunction, Request, Response, Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { UserService } from "../services/userService";
 import { PassportStatic } from "passport";
+import mysql from 'mysql2/promise'
 
-export default function (passport: PassportStatic)
+export default function (connection: mysql.Connection, passport: PassportStatic)
 {
     const userController = Router();
 
     userController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const userService = new UserService();
+        const userService = new UserService(connection);
         const allUsersResult = await userService.loadAll();
         res.status(200).json(allUsersResult);
     }));
@@ -23,13 +24,13 @@ export default function (passport: PassportStatic)
     }));
 
 	userController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const userService = new UserService();
+        const userService = new UserService(connection);
         const userUpdate = await userService.updateUser(req.body);
         res.status(201).json(userUpdate);
     }));
 
 	userController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const userService = new UserService();
+        const userService = new UserService(connection);
         const userInformation = await userService.loadUserById(req.params.id);
         if(userInformation !== null)
         {
@@ -40,7 +41,7 @@ export default function (passport: PassportStatic)
     }));
 
 	userController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const userService = new UserService();
+        const userService = new UserService(connection);
         const userInformation = await userService.loadUserById(req.params.id);
         
         if(userInformation !== null)
@@ -53,7 +54,7 @@ export default function (passport: PassportStatic)
     }));
 
 	userController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const userService = new UserService();
+        const userService = new UserService(connection);
         const userInformation = await userService.loadUserById(req.params.id);
 
         if(userInformation !== null)

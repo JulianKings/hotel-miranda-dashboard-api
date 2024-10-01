@@ -65,7 +65,7 @@ class BookingGenerator
 			customer_name: faker.person.fullName(),
 			date: new Date(faker.date.recent()),
 			status: faker.helpers.arrayElement(['checking_out', 'checking_in', 'in_progress']),
-			room: (rooms[roomItem]._id !== undefined) ? rooms[roomItem]._id : '',
+			room: + ((rooms[roomItem]._id !== undefined) ? rooms[roomItem]._id : ''),
 			check_in: new Date(faker.date.past()),
 			check_out: new Date(faker.date.future()),
 			notes: faker.lorem.paragraph({ min: 3, max: 8})   
@@ -219,7 +219,7 @@ async function createUser(user: ApiUserInterface, index: number, connection: mys
 	const formatedResult = result as QueryResultSchema;
 	const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
 	const userObj = { ...user,
-		_id: newId
+		_id: newId+""
 	}
 
 	users[index] = userObj;
@@ -260,7 +260,7 @@ async function createContact(contact: ApiContactInterface, index: number, connec
 	const formatedResult = result as QueryResultSchema;
 	const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
 	const contactObj = { ...contact,
-		_id: newId
+		_id: newId+""
 	}
 
 	contacts[index] = contactObj;
@@ -298,7 +298,7 @@ async function createRoom(room: ApiRoomInterface, index: number, connection: mys
 	const formatedResult = result as QueryResultSchema;
 	const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
 	const roomObj = { ...room,
-		_id: newId
+		_id: newId+""
 	}
 
 	rooms[index] = roomObj;
@@ -378,7 +378,7 @@ async function createBooking(booking: ApiBookingInterface, index: number, connec
 	const formatedResult = result as QueryResultSchema;
 	const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
 	const bookingObj = { ...booking,
-		_id: newId
+		_id: newId+""
 	}
 
 	bookings[index] = bookingObj;
