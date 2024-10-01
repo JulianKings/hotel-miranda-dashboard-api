@@ -2,25 +2,26 @@ import { NextFunction, Request, Response, Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { BookingService } from "../services/bookingServices";
 import { PassportStatic } from "passport";
+import mysql from 'mysql2/promise'
 
-export default function (passport: PassportStatic)
+export default function (connection: mysql.Connection, passport: PassportStatic)
 {
     const bookingController = Router();
 
     bookingController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const bookingService = new BookingService();
+        const bookingService = new BookingService(connection);
         const allBookingsResult = await bookingService.loadAll();
         res.status(200).json(allBookingsResult);
     }));
 
     bookingController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const bookingService = new BookingService();
+        const bookingService = new BookingService(connection);
         const bookingUpdate = await bookingService.updateBooking(req.body);
         res.status(201).json(bookingUpdate);
     }));
 
     bookingController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const bookingService = new BookingService();
+        const bookingService = new BookingService(connection);
         const bookingInformation = await bookingService.loadBookingById(req.params.id);
         
         if(bookingInformation !== null)
@@ -32,7 +33,7 @@ export default function (passport: PassportStatic)
     }));
 
     bookingController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const bookingService = new BookingService();
+        const bookingService = new BookingService(connection);
         const bookingInformation = await bookingService.loadBookingById(req.params.id);
         
         if(bookingInformation !== null)
@@ -45,7 +46,7 @@ export default function (passport: PassportStatic)
     }));
 
     bookingController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const bookingService = new BookingService();
+        const bookingService = new BookingService(connection);
         const bookingInformation = await bookingService.loadBookingById(req.params.id);
         
         if(bookingInformation !== null)

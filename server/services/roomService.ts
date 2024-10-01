@@ -37,12 +37,12 @@ export class RoomService {
 
             const formatedResult = result as QueryResultSchema;
             const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
-            const userResult = { 
+            const roomResult = { 
                 ...roomObject,
                 id: newId,
                 _id: newId+""
             }
-            return userResult;
+            return roomResult;
         } else {
             await this.connection.query("UPDATE rooms SET ? WHERE id = ?",
                 [{
@@ -61,7 +61,8 @@ export class RoomService {
 
     async deleteRoom(id: string)
     {
-        const [result] = await this.connection.query("DELETE FROM rooms WHERE id = ?", [id]);
+        await this.connection.query("DELETE FROM bookings WHERE room_id = ?", [id]);
+        await this.connection.query("DELETE FROM rooms WHERE id = ?", [id]);
         return { _id: id };
     }
 

@@ -77,7 +77,7 @@ export class UserService {
 
     async deleteUser(id: string)
     {
-        const [result] = await this.connection.query("DELETE FROM users WHERE id = ?", [id]);
+        await this.connection.query("DELETE FROM users WHERE id = ?", [id]);
         return { _id: id };
     }
 
