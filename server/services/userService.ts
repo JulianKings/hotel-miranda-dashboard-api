@@ -71,8 +71,6 @@ export class UserService {
                     status: userObject.status, 
                     position: userObject.position
                 },  userObject._id])
-           
-            //const updatedUser = await userModel.findByIdAndUpdate(userObject._id, userObject, {});
             return userObject;
         }
     }

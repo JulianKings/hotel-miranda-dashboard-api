@@ -63,9 +63,9 @@ loadDatabase().then((connection: mysql.Connection) => {
   app.use('/user', passport.authenticate('jwt', { session: false }), userRouterHandler);
   /*const contactRouterHandler = contactController(passport);
   app.use('/contact', passport.authenticate('jwt', { session: false }), contactRouterHandler);
-  const roomRouterHandler = roomController(passport);
+  */const roomRouterHandler = roomController(connection, passport);
   app.use('/room', passport.authenticate('jwt', { session: false }), roomRouterHandler);
-  const bookingRouterHandler = bookingController(passport);
+  /*const bookingRouterHandler = bookingController(passport);
   app.use('/bookings', passport.authenticate('jwt', { session: false }), bookingRouterHandler);
   */
   const loginRouterHandler = loginController(passport);

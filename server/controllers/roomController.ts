@@ -2,25 +2,26 @@ import { NextFunction, Request, Response, Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { RoomService } from "../services/roomService";
 import { PassportStatic } from "passport";
+import mysql from 'mysql2/promise';
 
-export default function (passport: PassportStatic)
+export default function (connection: mysql.Connection, passport: PassportStatic)
 {
     const roomController = Router();
 
     roomController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const roomService = new RoomService();
+        const roomService = new RoomService(connection);
         const allRoomsResult = await roomService.loadAll();
         res.status(200).json(allRoomsResult);
     }));
 
     roomController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const roomService = new RoomService();
+        const roomService = new RoomService(connection);
         const roomUpdate = await roomService.updateRoom(req.body);
         res.status(201).json(roomUpdate);
     }));
 
     roomController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const roomService = new RoomService();
+        const roomService = new RoomService(connection);
         const roomInformation = await roomService.loadRoomById(req.params.id);
         if(roomInformation !== null)
         {
@@ -31,7 +32,7 @@ export default function (passport: PassportStatic)
     }));
 
     roomController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const roomService = new RoomService();
+        const roomService = new RoomService(connection);
         const roomInformation = await roomService.loadRoomById(req.params.id);
         
         if(roomInformation !== null)
@@ -44,7 +45,7 @@ export default function (passport: PassportStatic)
     }));
 
     roomController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const roomService = new RoomService();
+        const roomService = new RoomService(connection);
         const roomInformation = await roomService.loadRoomById(req.params.id);
         
         if(roomInformation !== null)
