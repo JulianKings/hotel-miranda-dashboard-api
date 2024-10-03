@@ -337,7 +337,7 @@ async function createAmenities(connection: mysql.Connection)
 	console.log('Adding amenities');
 	await connection.query("CREATE TABLE amenities (" +
 		"id INT PRIMARY KEY AUTO_INCREMENT NOT NULL," +
-		"NAME VARCHAR(100) NOT NULL" +
+		"name VARCHAR(100) NOT NULL" +
 		");"
 	)
 
