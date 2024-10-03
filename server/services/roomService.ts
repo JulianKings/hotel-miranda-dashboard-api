@@ -1,6 +1,7 @@
 import { QueryResultSchema } from 'interfaces/queryHelpers';
 import { ApiRoomInterface } from '../interfaces/room';
 import mysql from 'mysql2/promise'
+import { QueryAmenitiesInterface } from 'interfaces/amenities';
 
 export class RoomService {
     connection: mysql.Connection;
@@ -21,7 +22,17 @@ export class RoomService {
 
         if(roomResult.length > 0)
         {
-            return roomResult[0];
+            const [jointResult] = await this.connection.query("SELECT rooms.id,GROUP_CONCAT(rooms_amenities.amenity_id) AS amenities_list FROM rooms INNER JOIN rooms_amenities ON rooms.id = rooms_amenities.room_id  GROUP BY rooms_amenities.room_id HAVING id LIKE ?", [id]);
+            const amenitiesResult = jointResult as QueryAmenitiesInterface[];
+            const preparedResult = roomResult[0];
+            if(amenitiesResult.length > 0)
+            {
+                const jointAmenities = amenitiesResult[0];
+                preparedResult.amenities = jointAmenities.amenities_list.split(',');
+            } else {
+                preparedResult.amenities = [];
+            }
+            return preparedResult;
         } else {
             return null;
         }

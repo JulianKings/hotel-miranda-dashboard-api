@@ -156,9 +156,10 @@ async function main() {
 	dotenv.config();
 	
 	const connection = await mysql.createConnection({
-		host: (process.env.SQL_HOST !== undefined) ? process.env.SQL_HOST : '',
-		user: (process.env.SQL_USER !== undefined) ? process.env.SQL_USER : '',
-		database: 'miranda',
+		host: (process.env.SQL_HOST !== undefined) ? process.env.SQL_HOST : 'localhost',
+		user: (process.env.SQL_USER !== undefined) ? process.env.SQL_USER : 'admin',
+		port: ((process.env.SQL_PORT !== undefined) ? +process.env.SQL_PORT : 3306),
+		database: (process.env.SQL_DATABASE !== undefined) ? process.env.SQL_DATABASE : 'miranda',
 		password: (process.env.SQL_PASSWORD !== undefined) ? process.env.SQL_PASSWORD : ''
 	});
 	console.log("Debug: Should be connected?");
