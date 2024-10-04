@@ -87,6 +87,7 @@ export class UserService {
             return {
                 ...user,
                 _id: user.id+"",
+                profile_picture: user.profile_picture.replaceAll('&#x2F;', '/'),
                 start: new Date(Date.parse((typeof(user.start) === 'string') ? user.start : user.start.toDateString()))
             }
         })
