@@ -3,6 +3,8 @@ import expressAsyncHandler from "express-async-handler";
 import { RoomService } from "../services/roomService";
 import { PassportStatic } from "passport";
 import mysql from 'mysql2/promise';
+import { body, validationResult } from "express-validator";
+import { isValidId } from "../util/dataValidation";
 
 export default function (connection: mysql.Connection, passport: PassportStatic)
 {
@@ -14,46 +16,145 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
         res.status(200).json(allRoomsResult);
     }));
 
-    roomController.post('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const roomService = new RoomService(connection);
-        const roomUpdate = await roomService.updateRoom(req.body);
-        res.status(201).json(roomUpdate);
-    }));
+    roomController.post('/', [
+        body("type", "Room type must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("floor", "Room floor must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(), 
+        body("number", "Room number must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("images", "Room images must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("price", "Room price must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("offer", "Room offer must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("status", "Room status must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("description", "Room description must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),  
+            
+        expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+            const errors = validationResult(req);
+            
+            if(errors.isEmpty())
+            {
+                const roomService = new RoomService(connection);
+                const roomUpdate = await roomService.updateRoom(req.body);
+                res.status(201).json(roomUpdate);
+            } else {
+                res.status(400).json({ errors: errors});
+            }
+        })
+    ]);
 
     roomController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const roomService = new RoomService(connection);
-        const roomInformation = await roomService.loadRoomById(req.params.id);
-        if(roomInformation !== null)
+        if(isValidId(req.params.id))
         {
-            res.status(200).json(roomInformation);
+            const roomService = new RoomService(connection);
+            const roomInformation = await roomService.loadRoomById(req.params.id);
+            if(roomInformation !== null)
+            {
+                res.status(200).json(roomInformation);
+            } else {
+                res.status(400).json({ error: 'Invalid Room' })
+            }
         } else {
-            res.status(400).json({ error: 'Invalid Room' })
+            res.status(400).json({ error: 'Invalid Id' })
         }
     }));
 
-    roomController.put('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const roomService = new RoomService(connection);
-        const roomInformation = await roomService.loadRoomById(req.params.id);
+    roomController.put('/:id', [
+        body("type", "Room type must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("floor", "Room floor must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(), 
+        body("number", "Room number must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("images", "Room images must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("price", "Room price must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("offer", "Room offer must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("status", "Room status must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("description", "Room description must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
         
-        if(roomInformation !== null)
-        {
-            const updateResult = await roomService.updateRoom(req.body);
-            res.status(201).json(updateResult);
-        } else {
-            res.status(400).json({ error: 'Invalid Room' })
-        }
-    }));
+        expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
+            const errors = validationResult(req);
+            
+            if(errors.isEmpty())
+            {
+                if(isValidId(req.params.id))
+                {
+                    const roomService = new RoomService(connection);
+                    const roomInformation = await roomService.loadRoomById(req.params.id);
+                    
+                    if(roomInformation !== null)
+                    {
+                        const updateResult = await roomService.updateRoom(req.body);
+                        res.status(201).json(updateResult);
+                    } else {
+                        res.status(400).json({ error: 'Invalid Room' })
+                    }
+                } else {
+                    res.status(400).json({ error: 'Invalid Id' })
+                }
+            } else {
+                res.status(400).json({ errors: errors});
+            }
+        })
+    ]);
 
     roomController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-        const roomService = new RoomService(connection);
-        const roomInformation = await roomService.loadRoomById(req.params.id);
-        
-        if(roomInformation !== null)
+        if(isValidId(req.params.id))
         {
-            const deleteResult = await roomService.deleteRoom(req.params.id);
-            res.status(201).json(deleteResult);
+            const roomService = new RoomService(connection);
+            const roomInformation = await roomService.loadRoomById(req.params.id);
+            
+            if(roomInformation !== null)
+            {
+                const deleteResult = await roomService.deleteRoom(req.params.id);
+                res.status(201).json(deleteResult);
+            } else {
+                res.status(400).json({ error: 'Invalid Room' })
+            }
         } else {
-            res.status(400).json({ error: 'Invalid Room' })
+            res.status(400).json({ error: 'Invalid Id' })
         }
     }));
 
