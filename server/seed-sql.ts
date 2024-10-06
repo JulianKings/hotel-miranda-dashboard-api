@@ -364,8 +364,8 @@ async function createRoomAmenities(connection: mysql.Connection)
 		"id INT PRIMARY KEY AUTO_INCREMENT NOT NULL," +
 		"room_id INT NOT NULL," +
 		"amenity_id INT NOT NULL," +
-		"FOREIGN KEY(room_id) REFERENCES rooms(id)," +
-		"FOREIGN KEY(amenity_id) REFERENCES amenities(id)" +
+		"FOREIGN KEY(room_id) REFERENCES rooms(id) ON DELETE CASCADE," +
+		"FOREIGN KEY(amenity_id) REFERENCES amenities(id) ON DELETE CASCADE" +
 		");"
 	)
 }
@@ -397,7 +397,7 @@ async function createBookings(connection: mysql.Connection) {
 		"check_in VARCHAR(100) NOT NULL," +
 		"check_out VARCHAR(100) NOT NULL," +
 		"notes VARCHAR(5000) NOT NULL," +
-		"FOREIGN KEY(room_id) REFERENCES rooms(id)" +
+		"FOREIGN KEY(room_id) REFERENCES rooms(id) ON DELETE CASCADE" +
 		");"
 	);
 

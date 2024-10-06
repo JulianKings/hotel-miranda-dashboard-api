@@ -1,22 +1,16 @@
 import { QueryResultSchema } from 'interfaces/queryHelpers';
 import { ApiContactInterface } from '../interfaces/contact';
-import mysql from 'mysql2/promise';
+import { runExecute, runFastQuery, runQuery } from '../database/databaseFunctions';
 
 export class ContactService {
-    connection: mysql.Connection;
 
-    constructor(connection: mysql.Connection)
-    {
-        this.connection = connection;
-    }
-
-    async loadAll(): Promise<ApiContactInterface[]> {
-        const [result] = await this.connection.query("SELECT * FROM contacts");
+    static async loadAll(): Promise<ApiContactInterface[]> {
+        const result = await runFastQuery("SELECT * FROM contacts");
         return this.formatContactArray(result as ApiContactInterface[]);
     }
 
-    async loadContactById(id: string): Promise<ApiContactInterface | null> {
-        const [result] = await this.connection.query("SELECT * FROM contacts WHERE id = ?", [id]);
+    static async loadContactById(id: string): Promise<ApiContactInterface | null> {
+        const result = await runQuery("SELECT * FROM contacts WHERE id = ?", [id]);
         const contactResult = this.formatContactArray(result as ApiContactInterface[]);
 
         if(contactResult.length > 0)
@@ -27,11 +21,11 @@ export class ContactService {
         }
     }
 
-    async updateContact(contactObject: ApiContactInterface)
+    static async updateContact(contactObject: ApiContactInterface)
     {
         if(contactObject._id === undefined)
         {
-            const [result] = await this.connection.execute("INSERT INTO contacts (customer_name, customer_mail, customer_phone, date, status, subject, comment)" +
+            const result = await runExecute("INSERT INTO contacts (customer_name, customer_mail, customer_phone, date, status, subject, comment)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?);",
                 [contactObject.customer_name, contactObject.customer_mail, contactObject.customer_phone, contactObject.date, contactObject.status, contactObject.subject, contactObject.comment])
             
@@ -45,7 +39,7 @@ export class ContactService {
             }
             return contactResult;
         } else {
-            await this.connection.query("UPDATE contacts SET ? WHERE id = ?",
+            await runQuery("UPDATE contacts SET ? WHERE id = ?",
                 [{
                     customer_name: contactObject.customer_name, 
                     customer_mail: contactObject.customer_mail, 
@@ -59,13 +53,13 @@ export class ContactService {
         }
     }
 
-    async deleteContact(id: string)
+    static async deleteContact(id: string)
     {
-        const [result] = await this.connection.query("DELETE FROM contacts WHERE id = ?", [id]);
+        await runQuery("DELETE FROM contacts WHERE id = ?", [id]);
         return { _id: id };
     }
 
-    formatContactArray(array: ApiContactInterface[]):  ApiContactInterface[]
+    static formatContactArray(array: ApiContactInterface[]):  ApiContactInterface[]
     {
         return array.map((contact: ApiContactInterface) => {
             return {

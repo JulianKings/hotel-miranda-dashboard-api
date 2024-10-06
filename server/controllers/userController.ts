@@ -2,17 +2,15 @@ import { NextFunction, Request, Response, Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { UserService } from "../services/userService";
 import { PassportStatic } from "passport";
-import mysql from 'mysql2/promise'
 import { body, validationResult } from "express-validator";
 import { isValidId } from "../util/dataValidation";
 
-export default function (connection: mysql.Connection, passport: PassportStatic)
+export default function (passport: PassportStatic)
 {
     const userController = Router();
 
     userController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const userService = new UserService(connection);
-        const allUsersResult = await userService.loadAll();
+        const allUsersResult = await UserService.loadAll();
         res.status(200).json(allUsersResult);
     }));
 
@@ -68,8 +66,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             
             if(errors.isEmpty())
             {
-                const userService = new UserService(connection);
-                const userUpdate = await userService.updateUser(req.body);
+                const userUpdate = await UserService.updateUser(req.body);
                 res.status(201).json(userUpdate);
             } else {
                 res.status(400).json({ errors: errors});
@@ -80,8 +77,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
 	userController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {
-            const userService = new UserService(connection);
-            const userInformation = await userService.loadUserById(req.params.id);
+            const userInformation = await UserService.loadUserById(req.params.id);
             if(userInformation !== null)
             {
                 res.status(200).json(userInformation);
@@ -141,12 +137,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             {
                 if(isValidId(req.params.id))
                 {
-                    const userService = new UserService(connection);
-                    const userInformation = await userService.loadUserById(req.params.id);
+                    const userInformation = await UserService.loadUserById(req.params.id);
                     
                     if(userInformation !== null)
                     {
-                        const updateUser = await userService.updateUser(req.body);
+                        const updateUser = await UserService.updateUser(req.body);
                         res.status(201).json(updateUser);
                     } else {
                         res.status(400).json({ error: 'Invalid User' })
@@ -163,12 +158,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
 	userController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {
-            const userService = new UserService(connection);
-            const userInformation = await userService.loadUserById(req.params.id);
+            const userInformation = await UserService.loadUserById(req.params.id);
 
             if(userInformation !== null)
             {
-                const deleteUser = await userService.deleteUser(req.params.id);
+                const deleteUser = await UserService.deleteUser(req.params.id);
                 res.status(201).json(deleteUser);
             } else {
                 res.status(400).json({ error: 'Invalid User' })

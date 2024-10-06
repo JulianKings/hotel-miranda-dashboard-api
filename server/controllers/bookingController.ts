@@ -6,13 +6,12 @@ import mysql from 'mysql2/promise';
 import { body, validationResult } from "express-validator";
 import { isValidId } from "../util/dataValidation";
 
-export default function (connection: mysql.Connection, passport: PassportStatic)
+export default function (passport: PassportStatic)
 {
     const bookingController = Router();
 
     bookingController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const bookingService = new BookingService(connection);
-        const allBookingsResult = await bookingService.loadAll();
+        const allBookingsResult = await BookingService.loadAll();
         res.status(200).json(allBookingsResult);
     }));
 
@@ -55,8 +54,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             
             if(errors.isEmpty())
             {
-                const bookingService = new BookingService(connection);
-                const bookingUpdate = await bookingService.updateBooking(req.body);
+                const bookingUpdate = await BookingService.updateBooking(req.body);
                 res.status(201).json(bookingUpdate);
             } else {
                 res.status(400).json({ errors: errors});
@@ -67,8 +65,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
     bookingController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {
-            const bookingService = new BookingService(connection);
-            const bookingInformation = await bookingService.loadBookingById(req.params.id);
+            const bookingInformation = await BookingService.loadBookingById(req.params.id);
             
             if(bookingInformation !== null)
             {
@@ -122,12 +119,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             {
                 if(isValidId(req.params.id))
                 {
-                    const bookingService = new BookingService(connection);
-                    const bookingInformation = await bookingService.loadBookingById(req.params.id);
+                    const bookingInformation = await BookingService.loadBookingById(req.params.id);
                     
                     if(bookingInformation !== null)
                     {
-                        const updateResult = await bookingService.updateBooking(req.body);
+                        const updateResult = await BookingService.updateBooking(req.body);
                         res.status(201).json(updateResult);
                     } else {
                         res.status(400).json({ error: 'Invalid Booking' })
@@ -144,12 +140,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
     bookingController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {    
-            const bookingService = new BookingService(connection);
-            const bookingInformation = await bookingService.loadBookingById(req.params.id);
+            const bookingInformation = await BookingService.loadBookingById(req.params.id);
             
             if(bookingInformation !== null)
             {
-                const deleteResult = await bookingService.deleteBooking(req.params.id);
+                const deleteResult = await BookingService.deleteBooking(req.params.id);
                 res.status(201).json(deleteResult);
             } else {
                 res.status(400).json({ error: 'Invalid Booking' })

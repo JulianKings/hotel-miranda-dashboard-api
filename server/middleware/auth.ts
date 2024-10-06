@@ -8,12 +8,10 @@ import mysql from 'mysql2/promise';
 const LocalJWTStrategy = jwtStrategy;
 const LocalExtractJWT = ExtractJwt;
 
-export const applyPassportMiddleware = (passport: PassportStatic, connection: mysql.Connection) =>
+export const applyPassportMiddleware = (passport: PassportStatic) =>
 {
     const nameField = 'username';
     const pwdField = 'password';
-
-    const userService = new UserService(connection);
 
     passport.use(
         'login',
@@ -24,7 +22,7 @@ export const applyPassportMiddleware = (passport: PassportStatic, connection: my
             },
             async (name, password, done) => {
             try {
-                const user = await userService.loadUserByName(name);
+                const user = await UserService.loadUserByName(name);
 
                 if (!user) {
                     return done(null, false, { path: nameField, msg: 'User not found' } as unknown as IVerifyOptions);

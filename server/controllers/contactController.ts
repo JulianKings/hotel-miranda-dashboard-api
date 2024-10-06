@@ -2,17 +2,15 @@ import { NextFunction, Request, Response, Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { ContactService } from "../services/contactService";
 import { PassportStatic } from "passport";
-import mysql from 'mysql2/promise';
 import { body, validationResult } from "express-validator";
 import { isValidId } from "../util/dataValidation";
 
-export default function (connection: mysql.Connection, passport: PassportStatic)
+export default function (passport: PassportStatic)
 {
     const contactController = Router();
 
     contactController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const contactService = new ContactService(connection);
-        const allContactsResult = await contactService.loadAll();
+        const allContactsResult = await ContactService.loadAll();
         res.status(200).json(allContactsResult);
     }));
 
@@ -51,8 +49,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             
             if(errors.isEmpty())
             {
-                const contactService = new ContactService(connection);
-                const contactUpdate = await contactService.updateContact(req.body);
+                const contactUpdate = await ContactService.updateContact(req.body);
                 res.status(201).json(contactUpdate);
             } else {
                 res.status(400).json({ errors: errors});
@@ -63,8 +60,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
     contactController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {
-            const contactService = new ContactService(connection);
-            const contactInformation = await contactService.loadContactById(req.params.id);
+            const contactInformation = await ContactService.loadContactById(req.params.id);
             
             if(contactInformation !== null)
             {
@@ -114,12 +110,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             {
                 if(isValidId(req.params.id))
                 {
-                    const contactService = new ContactService(connection);
-                    const contactInformation = await contactService.loadContactById(req.params.id);
+                    const contactInformation = await ContactService.loadContactById(req.params.id);
 
                     if(contactInformation !== null)
                     {
-                        const updateResult = await contactService.updateContact(req.body);
+                        const updateResult = await ContactService.updateContact(req.body);
                         res.status(201).json(updateResult);
                     } else {
                         res.status(400).json({ error: 'Invalid Contact' })
@@ -136,12 +131,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
     contactController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {
-            const contactService = new ContactService(connection);
-            const contactInformation = await contactService.loadContactById(req.params.id);
+            const contactInformation = await ContactService.loadContactById(req.params.id);
 
             if(contactInformation !== null)
             {
-                const deleteResult = await contactService.deleteContact(req.params.id);
+                const deleteResult = await ContactService.deleteContact(req.params.id);
                 res.status(201).json(deleteResult);
             } else {
                 res.status(400).json({ error: 'Invalid Contact' })

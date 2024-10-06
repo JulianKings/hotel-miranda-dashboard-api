@@ -1,48 +1,32 @@
 import { QueryResultSchema } from 'interfaces/queryHelpers';
 import { ApiRoomInterface } from '../interfaces/room';
-import mysql from 'mysql2/promise'
-import { QueryAmenitiesInterface } from 'interfaces/amenities';
+import { QueryApiRoomInterface } from '../interfaces/database';
+import { runFastQuery, runQuery } from '../database/databaseFunctions';
 
 export class RoomService {
-    connection: mysql.Connection;
 
-    constructor(connection: mysql.Connection)
-    {
-        this.connection = connection;
+    static async loadAll(): Promise<ApiRoomInterface[]> {
+        const result = await runFastQuery("SELECT rooms.*,GROUP_CONCAT(rooms_amenities.amenity_id) AS amenities_list FROM rooms LEFT JOIN rooms_amenities ON rooms.id = rooms_amenities.room_id GROUP BY rooms.id");
+        return this.formatRoomArray(result as QueryApiRoomInterface[]);
     }
 
-    async loadAll(): Promise<ApiRoomInterface[]> {
-        const [result] = await this.connection.query("SELECT * FROM rooms");
-        return this.formatRoomArray(result as ApiRoomInterface[]);
-    }
-
-    async loadRoomById(id: string): Promise<ApiRoomInterface | null> {
-        const [result] = await this.connection.query("SELECT * FROM rooms WHERE id = ?", [id]);
-        const roomResult = this.formatRoomArray(result as ApiRoomInterface[]);
+    static async loadRoomById(id: string): Promise<ApiRoomInterface | null> {
+        const result = await runQuery("SELECT rooms.*,GROUP_CONCAT(rooms_amenities.amenity_id) AS amenities_list FROM rooms LEFT JOIN rooms_amenities ON rooms.id = rooms_amenities.room_id WHERE rooms.id = ? GROUP BY rooms.id", [id]);
+        const roomResult = this.formatRoomArray(result as QueryApiRoomInterface[]);
 
         if(roomResult.length > 0)
         {
-            const [jointResult] = await this.connection.query("SELECT rooms.id,GROUP_CONCAT(rooms_amenities.amenity_id) AS amenities_list FROM rooms INNER JOIN rooms_amenities ON rooms.id = rooms_amenities.room_id  GROUP BY rooms_amenities.room_id HAVING id LIKE ?", [id]);
-            const amenitiesResult = jointResult as QueryAmenitiesInterface[];
-            const preparedResult = roomResult[0];
-            if(amenitiesResult.length > 0)
-            {
-                const jointAmenities = amenitiesResult[0];
-                preparedResult.amenities = jointAmenities.amenities_list.split(',');
-            } else {
-                preparedResult.amenities = [];
-            }
-            return preparedResult;
+            return roomResult[0];
         } else {
             return null;
         }
     }
 
-    async updateRoom(roomObject: ApiRoomInterface)
+    static async updateRoom(roomObject: ApiRoomInterface)
     {
         if(roomObject._id === undefined)
         {
-            const [result] = await this.connection.execute("INSERT INTO rooms (type, floor, number, images, price, offer, status, description)" +
+            const result = runQuery("INSERT INTO rooms (type, floor, number, images, price, offer, status, description)" +
 		        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
 		    [roomObject.type, roomObject.floor, roomObject.number, roomObject.images, roomObject.price, roomObject.offer, roomObject.status, roomObject.description])
 
@@ -51,11 +35,12 @@ export class RoomService {
             const roomResult = { 
                 ...roomObject,
                 id: newId,
-                _id: newId+""
+                _id: newId+"",
+                amenities: []
             }
             return roomResult;
         } else {
-            await this.connection.query("UPDATE rooms SET ? WHERE id = ?",
+            await runQuery("UPDATE rooms SET ? WHERE id = ?",
                 [{
                     type: roomObject.type, 
                     floor: roomObject.floor, 
@@ -70,19 +55,20 @@ export class RoomService {
         }
     }
 
-    async deleteRoom(id: string)
+    static async deleteRoom(id: string)
     {
-        await this.connection.query("DELETE FROM bookings WHERE room_id = ?", [id]);
-        await this.connection.query("DELETE FROM rooms WHERE id = ?", [id]);
+        await runQuery("DELETE FROM rooms WHERE id = ?", [id]);
         return { _id: id };
     }
 
-    formatRoomArray(array: ApiRoomInterface[]):  ApiRoomInterface[]
+    static formatRoomArray(array: QueryApiRoomInterface[]):  ApiRoomInterface[]
     {
-        return array.map((room: ApiRoomInterface) => {
+        return array.map((room: QueryApiRoomInterface) => {
             return {
                 ...room,
-                _id: room.id+""
+                _id: room.id+"",
+                amenities: (room.amenities_list === null) ? [] : 
+                    (room.amenities_list.includes(',') ? room.amenities_list.split(',') : [room.amenities_list])
             }
         })
     }

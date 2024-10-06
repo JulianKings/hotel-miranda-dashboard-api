@@ -2,17 +2,15 @@ import { NextFunction, Request, Response, Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { RoomService } from "../services/roomService";
 import { PassportStatic } from "passport";
-import mysql from 'mysql2/promise';
 import { body, validationResult } from "express-validator";
 import { isValidId } from "../util/dataValidation";
 
-export default function (connection: mysql.Connection, passport: PassportStatic)
+export default function (passport: PassportStatic)
 {
     const roomController = Router();
 
     roomController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const roomService = new RoomService(connection);
-        const allRoomsResult = await roomService.loadAll();
+        const allRoomsResult = await RoomService.loadAll();
         res.status(200).json(allRoomsResult);
     }));
 
@@ -55,8 +53,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             
             if(errors.isEmpty())
             {
-                const roomService = new RoomService(connection);
-                const roomUpdate = await roomService.updateRoom(req.body);
+                const roomUpdate = await RoomService.updateRoom(req.body);
                 res.status(201).json(roomUpdate);
             } else {
                 res.status(400).json({ errors: errors});
@@ -67,8 +64,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
     roomController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {
-            const roomService = new RoomService(connection);
-            const roomInformation = await roomService.loadRoomById(req.params.id);
+            const roomInformation = await RoomService.loadRoomById(req.params.id);
             if(roomInformation !== null)
             {
                 res.status(200).json(roomInformation);
@@ -121,12 +117,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             {
                 if(isValidId(req.params.id))
                 {
-                    const roomService = new RoomService(connection);
-                    const roomInformation = await roomService.loadRoomById(req.params.id);
+                    const roomInformation = await RoomService.loadRoomById(req.params.id);
                     
                     if(roomInformation !== null)
                     {
-                        const updateResult = await roomService.updateRoom(req.body);
+                        const updateResult = await RoomService.updateRoom(req.body);
                         res.status(201).json(updateResult);
                     } else {
                         res.status(400).json({ error: 'Invalid Room' })
@@ -143,12 +138,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
     roomController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {
-            const roomService = new RoomService(connection);
-            const roomInformation = await roomService.loadRoomById(req.params.id);
+            const roomInformation = await RoomService.loadRoomById(req.params.id);
             
             if(roomInformation !== null)
             {
-                const deleteResult = await roomService.deleteRoom(req.params.id);
+                const deleteResult = await RoomService.deleteRoom(req.params.id);
                 res.status(201).json(deleteResult);
             } else {
                 res.status(400).json({ error: 'Invalid Room' })
