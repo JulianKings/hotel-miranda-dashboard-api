@@ -1,22 +1,16 @@
 import { QueryResultSchema } from 'interfaces/queryHelpers';
 import { ApiUserInterface } from '../interfaces/user';
-import mysql from 'mysql2/promise'
+import { runExecute, runFastQuery, runQuery } from '../database/databaseFunctions';
 
 export class UserService {
-    connection: mysql.Connection;
 
-    constructor(connection: mysql.Connection)
-    {
-        this.connection = connection;
-    }
-
-    async loadAll(): Promise<ApiUserInterface[]> {
-        const [result] = await this.connection.query("SELECT * FROM users");
+    static async loadAll(): Promise<ApiUserInterface[]> {
+        const result = await runFastQuery("SELECT * FROM users");
         return this.formatUserArray(result as ApiUserInterface[]);
     }
 
-    async loadUserById(id: string): Promise<ApiUserInterface | null> {
-        const [result] = await this.connection.query("SELECT * FROM users WHERE id = ?", [id]);
+    static async loadUserById(id: string): Promise<ApiUserInterface | null> {
+        const result = await runQuery("SELECT * FROM users WHERE id = ?", [id]);
         const userResult = this.formatUserArray(result as ApiUserInterface[]);
 
         if(userResult.length > 0)
@@ -27,8 +21,8 @@ export class UserService {
         }
     }
 
-    async loadUserByName(name: string): Promise<ApiUserInterface | null> {
-        const [result] = await this.connection.query("SELECT * FROM users WHERE name = ?", [name]);
+    static async loadUserByName(name: string): Promise<ApiUserInterface | null> {
+        const result = await runQuery("SELECT * FROM users WHERE name = ?", [name]);
         const userResult = this.formatUserArray(result as ApiUserInterface[]);
 
         if(userResult.length > 0)
@@ -39,11 +33,11 @@ export class UserService {
         }
     }
 
-    async updateUser(userObject: ApiUserInterface)
+    static async updateUser(userObject: ApiUserInterface)
     {
         if(userObject._id === undefined)
         {
-            const [result] = await this.connection.execute("INSERT INTO users (name, full_name, password, mail, profile_picture, start, description, contact, status, position)" +
+            const result = await runExecute("INSERT INTO users (name, full_name, password, mail, profile_picture, start, description, contact, status, position)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
                 [userObject.name, userObject.full_name, userObject.password, userObject.mail, userObject.profile_picture, userObject.start, 
                     userObject.description, userObject.contact, userObject.status, userObject.position])
@@ -58,7 +52,7 @@ export class UserService {
             }
             return userResult;
         } else {
-            await this.connection.query("UPDATE users SET ? WHERE id = ?",
+            await runQuery("UPDATE users SET ? WHERE id = ?",
                 [{
                     name: userObject.name, 
                     full_name: userObject.full_name, 
@@ -75,13 +69,13 @@ export class UserService {
         }
     }
 
-    async deleteUser(id: string)
+    static async deleteUser(id: string)
     {
-        await this.connection.query("DELETE FROM users WHERE id = ?", [id]);
+        await runQuery("DELETE FROM users WHERE id = ?", [id]);
         return { _id: id };
     }
 
-    formatUserArray(array: ApiUserInterface[]):  ApiUserInterface[]
+    static formatUserArray(array: ApiUserInterface[]):  ApiUserInterface[]
     {
         return array.map((user: ApiUserInterface) => {
             return {

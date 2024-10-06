@@ -1,23 +1,17 @@
 import { QueryResultSchema } from 'interfaces/queryHelpers';
-import mysql from 'mysql2/promise';
-import { ApiAmenitiesInterface } from 'interfaces/amenities';
+import { ApiAmenitiesInterface } from '../interfaces/amenities';
+import { runExecute, runFastQuery, runQuery } from '../database/databaseFunctions';
 
 export class AmenitiesService {
-    connection: mysql.Connection;
 
-    constructor(connection: mysql.Connection)
-    {
-        this.connection = connection;
+    static async loadAll(): Promise<ApiAmenitiesInterface[]> {
+        const result = await runFastQuery("SELECT * FROM amenities");
+        return AmenitiesService.formatAmenitiesArray(result as ApiAmenitiesInterface[]);
     }
 
-    async loadAll(): Promise<ApiAmenitiesInterface[]> {
-        const [result] = await this.connection.query("SELECT * FROM amenities");
-        return this.formatAmenitiesArray(result as ApiAmenitiesInterface[]);
-    }
-
-    async loadAmenityById(id: string): Promise<ApiAmenitiesInterface | null> {
-        const [result] = await this.connection.query("SELECT * FROM amenities WHERE id = ?", [id]);
-        const amenityResult = this.formatAmenitiesArray(result as ApiAmenitiesInterface[]);
+    static async loadAmenityById(id: string): Promise<ApiAmenitiesInterface | null> {
+        const result = await runQuery("SELECT * FROM amenities WHERE id = ?", [id]);
+        const amenityResult = AmenitiesService.formatAmenitiesArray(result as ApiAmenitiesInterface[]);
 
         if(amenityResult.length > 0)
         {
@@ -27,11 +21,11 @@ export class AmenitiesService {
         }
     }
 
-    async updateAmenity(amenitiesObject: ApiAmenitiesInterface)
+    static async updateAmenity(amenitiesObject: ApiAmenitiesInterface)
     {
         if(amenitiesObject._id === undefined)
         {
-            const [result] = await this.connection.execute("INSERT INTO amenities (name)" +
+            const result = await runExecute("INSERT INTO amenities (name)" +
                 "VALUES (?);",
                 [amenitiesObject.name])
             
@@ -44,7 +38,7 @@ export class AmenitiesService {
             }
             return amenitiesResult;
         } else {
-            await this.connection.query("UPDATE amenities SET ? WHERE id = ?",
+            await runQuery("UPDATE amenities SET ? WHERE id = ?",
                 [{
                     name: amenitiesObject.name
                 },  amenitiesObject._id])
@@ -52,13 +46,13 @@ export class AmenitiesService {
         }
     }
 
-    async deleteAmenity(id: string)
+    static async deleteAmenity(id: string)
     {
-        const [result] = await this.connection.query("DELETE FROM amenities WHERE id = ?", [id]);
+        await runQuery("DELETE FROM amenities WHERE id = ?", [id]);
         return { _id: id };
     }
 
-    formatAmenitiesArray(array: ApiAmenitiesInterface[]):  ApiAmenitiesInterface[]
+    static formatAmenitiesArray(array: ApiAmenitiesInterface[]):  ApiAmenitiesInterface[]
     {
         return array.map((amenity: ApiAmenitiesInterface) => {
             return {

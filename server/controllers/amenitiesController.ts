@@ -1,18 +1,16 @@
 import { NextFunction, Request, Response, Router } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { PassportStatic } from "passport";
-import mysql from 'mysql2/promise';
 import { AmenitiesService } from "../services/amenitiesServices";
 import { isValidId } from "../util/dataValidation";
 import { body, validationResult } from "express-validator";
 
-export default function (connection: mysql.Connection, passport: PassportStatic)
+export default function (passport: PassportStatic)
 {
     const amenityController = Router();
 
     amenityController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const amenityService = new AmenitiesService(connection);
-        const allAmenitiesResult = await amenityService.loadAll();
+        const allAmenitiesResult = await AmenitiesService.loadAll();
         res.status(200).json(allAmenitiesResult);
     }));
 
@@ -27,8 +25,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             
             if(errors.isEmpty())
             {
-                const amenityService = new AmenitiesService(connection);
-                const amenityUpdate = await amenityService.updateAmenity(req.body);
+                const amenityUpdate = await AmenitiesService.updateAmenity(req.body);
                 res.status(201).json(amenityUpdate);
             } else {
                 res.status(400).json({ errors: errors});
@@ -39,8 +36,7 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
     amenityController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {
-            const amenityService = new AmenitiesService(connection);
-            const amenityInformation = await amenityService.loadAmenityById(req.params.id);
+            const amenityInformation = await AmenitiesService.loadAmenityById(req.params.id);
             
             if(amenityInformation !== null)
             {
@@ -66,12 +62,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
             {
                 if(isValidId(req.params.id))
                 {
-                    const amenityService = new AmenitiesService(connection);
-                    const amenityInformation = await amenityService.loadAmenityById(req.params.id);
+                    const amenityInformation = await AmenitiesService.loadAmenityById(req.params.id);
 
                     if(amenityInformation !== null)
                     {
-                        const updateResult = await amenityService.updateAmenity(req.body);
+                        const updateResult = await AmenitiesService.updateAmenity(req.body);
                         res.status(201).json(updateResult);
                     } else {
                         res.status(400).json({ error: 'Invalid Amenity' })
@@ -88,12 +83,11 @@ export default function (connection: mysql.Connection, passport: PassportStatic)
     amenityController.delete('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         if(isValidId(req.params.id))
         {
-            const amenityService = new AmenitiesService(connection);
-            const amenityInformation = await amenityService.loadAmenityById(req.params.id);
+            const amenityInformation = await AmenitiesService.loadAmenityById(req.params.id);
 
             if(amenityInformation !== null)
             {
-                const deleteResult = await amenityService.deleteAmenity(req.params.id);
+                const deleteResult = await AmenitiesService.deleteAmenity(req.params.id);
                 res.status(201).json(deleteResult);
             } else {
                 res.status(400).json({ error: 'Invalid Amenity' })
