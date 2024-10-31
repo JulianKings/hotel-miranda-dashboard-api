@@ -2,7 +2,7 @@ import { ApiAbstractInterface } from "./apiManagement";
 import { ApiRoomInterface } from "./room";
 
 export interface ApiBookingInterface extends ApiAbstractInterface {
-    customer_name: string;
+    client_id: number;
     date: Date;
     status: 'checking_out' | 'checking_in' | 'in_progress',
     room: number | ApiRoomInterface;
@@ -18,4 +18,7 @@ export interface ApiBookingInterface extends ApiAbstractInterface {
     roomOffer?: number;
     roomStatus?: string;
     roomDescription?: string;
+    clientId?: number;
+    clientName?: string;
+    clientMail?: string;
 }
