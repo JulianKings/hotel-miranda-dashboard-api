@@ -6,7 +6,7 @@ service: nodejs-aws-lambda
 provider:
   name: aws
   runtime: nodejs18.x
-  region: eu-north-1
+  region: us-east-1
   stage: production
   environment:
     JWT_SECURE_KEY: ${env:JWT_SECURE_KEY}
