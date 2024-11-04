@@ -8,6 +8,8 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   stage: production
+  logs:
+    restApi: false
   environment:
     JWT_SECURE_KEY: ${env:JWT_SECURE_KEY}
     SQL_HOST: ${env:SQL_HOST}
