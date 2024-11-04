@@ -16,9 +16,9 @@ functions:
       - http: ANY /
       - http: ANY /{proxy+}
     environment:
-      JWT_SECURE_KEY: ${{ secrets.JWT_SECURE_KEY }}
-      SQL_HOST: ${{ secrets.SQL_HOST }}
-      SQL_PORT: ${{ secrets.SQL_PORT }}
-      SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
-      SQL_USER: ${{ secrets.SQL_USER }}
-      SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+      JWT_SECURE_KEY: ${env:JWT_SECURE_KEY}
+      SQL_HOST: ${env:SQL_HOST}
+      SQL_PORT: ${env:SQL_PORT}
+      SQL_DATABASE: ${env:SQL_DATABASE}
+      SQL_USER: ${env:SQL_USER}
+      SQL_PASSWORD: ${env:SQL_PASSWORD}
