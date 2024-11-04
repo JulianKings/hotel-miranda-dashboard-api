@@ -6,13 +6,13 @@ import { runExecute, runFastQuery, runQuery } from '../database/databaseFunction
 export class BookingService {
 
     static async loadAll(): Promise<ApiBookingInterface[]> {
-        const result = await runFastQuery("SELECT bookings.*,rooms.id as roomId,rooms.type as roomType,rooms.floor as roomFloor,rooms.number as roomNumber,rooms.images as roomImages,rooms.price as roomPrice,rooms.offer as roomOffer,rooms.status as roomStatus,rooms.description as roomDescription FROM bookings INNER JOIN rooms ON bookings.room_id = rooms.id GROUP BY bookings.id");
-        return this.formatContactArray(result as ApiBookingInterface[]);
+        const result = await runFastQuery("SELECT bookings.*,clients.name AS clientName, clients.email AS clientMail,clients.id AS clientId,rooms.id as roomId,rooms.type as roomType,rooms.floor as roomFloor,rooms.number as roomNumber,rooms.images as roomImages,rooms.price as roomPrice,rooms.offer as roomOffer,rooms.status as roomStatus,rooms.description as roomDescription FROM bookings INNER JOIN rooms ON bookings.room_id = rooms.id INNER JOIN clients ON bookings.client_id = clients.id GROUP BY bookings.id");
+        return this.formatBookingArray(result as ApiBookingInterface[]);
     }
 
     static async loadBookingById(id: string): Promise<ApiBookingInterface | null> {
-        const result = await runQuery("SELECT bookings.*,rooms.id as roomId,rooms.type as roomType,rooms.floor as roomFloor,rooms.number as roomNumber,rooms.images as roomImages,rooms.price as roomPrice,rooms.offer as roomOffer,rooms.status as roomStatus,rooms.description as roomDescription FROM bookings INNER JOIN rooms ON bookings.room_id = rooms.id WHERE bookings.id = ? GROUP BY bookings.id", [id]);
-        const bookingResult = this.formatContactArray(result as ApiBookingInterface[]);
+        const result = await runQuery("SELECT bookings.*,clients.name AS clientName, clients.email AS clientMail,clients.id AS clientId,rooms.id as roomId,rooms.type as roomType,rooms.floor as roomFloor,rooms.number as roomNumber,rooms.images as roomImages,rooms.price as roomPrice,rooms.offer as roomOffer,rooms.status as roomStatus,rooms.description as roomDescription FROM bookings INNER JOIN rooms ON bookings.room_id = rooms.id INNER JOIN clients ON bookings.client_id = clients.id WHERE bookings.id = ? GROUP BY bookings.id", [id]);
+        const bookingResult = this.formatBookingArray(result as ApiBookingInterface[]);
 
         if(bookingResult.length > 0)
         {
@@ -26,9 +26,9 @@ export class BookingService {
     {
         if(bookingObject._id === undefined)
         {
-            const result = await runExecute("INSERT INTO bookings (customer_name, customer_dni, date, status, room_id, check_in, check_out, notes)" +
+            const result = await runExecute("INSERT INTO bookings (client_id, date, status, room_id, check_in, check_out, notes)" +
 		        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-		        [bookingObject.customer_name, '12345678D', bookingObject.date, bookingObject.status, bookingObject.room, bookingObject.check_in, bookingObject.check_out, bookingObject.notes])
+		        [bookingObject.client_id, bookingObject.date, bookingObject.status, bookingObject.room, bookingObject.check_in, bookingObject.check_out, bookingObject.notes])
 
             const formatedResult = result as QueryResultSchema;
             const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
@@ -44,8 +44,7 @@ export class BookingService {
         } else {
             await runQuery("UPDATE bookings SET ? WHERE id = ?",
                 [{
-                    customer_name: bookingObject.customer_name, 
-                    customer_dni: '12345678D', 
+                    client_id: bookingObject.client_id, 
                     date: bookingObject.date, 
                     status: bookingObject.status, 
                     room: bookingObject.room, 
@@ -63,7 +62,7 @@ export class BookingService {
         return { _id: id };
     }
 
-    static formatContactArray(array: ApiBookingInterface[]):  ApiBookingInterface[]
+    static formatBookingArray(array: ApiBookingInterface[]):  ApiBookingInterface[]
     {
         return array.map((booking: ApiBookingInterface) => {
             return {
@@ -83,7 +82,12 @@ export class BookingService {
                     offer: booking.roomOffer,
                     status: booking.roomStatus,
                     description: booking.roomDescription
-                } as ApiRoomInterface
+                } as ApiRoomInterface,
+                client: {
+                    id: booking.clientId,
+                    name: booking.clientName,
+                    mail: booking.clientMail
+                }
             }
         })
     }

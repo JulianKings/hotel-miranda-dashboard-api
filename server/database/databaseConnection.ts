@@ -6,6 +6,6 @@ dotenv.config();
 export const connection = mysql.createPool({
     host: (process.env.SQL_HOST !== undefined) ? process.env.SQL_HOST : '',
     user: (process.env.SQL_USER !== undefined) ? process.env.SQL_USER : '',
-    database: 'miranda',
+    database: (process.env.SQL_DATABASE !== undefined) ? process.env.SQL_DATABASE : 'miranda',
     password: (process.env.SQL_PASSWORD !== undefined) ? process.env.SQL_PASSWORD : ''
 });

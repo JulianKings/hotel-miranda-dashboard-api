@@ -6,12 +6,12 @@ import { runFastQuery, runQuery } from '../database/databaseFunctions';
 export class RoomService {
 
     static async loadAll(): Promise<ApiRoomInterface[]> {
-        const result = await runFastQuery("SELECT rooms.*,GROUP_CONCAT(rooms_amenities.amenity_id) AS amenities_list FROM rooms LEFT JOIN rooms_amenities ON rooms.id = rooms_amenities.room_id GROUP BY rooms.id");
+        const result = await runFastQuery("SELECT rooms.*,GROUP_CONCAT(room_amenities.amenity_id) AS amenities_list FROM rooms LEFT JOIN room_amenities ON rooms.id = room_amenities.room_id GROUP BY rooms.id");
         return this.formatRoomArray(result as QueryApiRoomInterface[]);
     }
 
     static async loadRoomById(id: string): Promise<ApiRoomInterface | null> {
-        const result = await runQuery("SELECT rooms.*,GROUP_CONCAT(rooms_amenities.amenity_id) AS amenities_list FROM rooms LEFT JOIN rooms_amenities ON rooms.id = rooms_amenities.room_id WHERE rooms.id = ? GROUP BY rooms.id", [id]);
+        const result = await runQuery("SELECT rooms.*,GROUP_CONCAT(room_amenities.amenity_id) AS amenities_list FROM rooms LEFT JOIN room_amenities ON rooms.id = room_amenities.room_id WHERE rooms.id = ? GROUP BY rooms.id", [id]);
         const roomResult = this.formatRoomArray(result as QueryApiRoomInterface[]);
 
         if(roomResult.length > 0)

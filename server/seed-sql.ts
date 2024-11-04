@@ -168,11 +168,11 @@ async function main() {
 		await runCleanup(connection);
 		concatenateDefaultUsers();
 		await createUsers(connection);
-		await createContacts(connection);
-		await createRooms(connection);
-		const book = new BookingGenerator(rooms);
-		bookings = faker.helpers.multiple(book.createRandomBooking, { count: 20, });
-		await createBookings(connection);
+		//await createContacts(connection);
+		//await createRooms(connection);
+		//const book = new BookingGenerator(rooms);
+		//bookings = faker.helpers.multiple(book.createRandomBooking, { count: 20, });
+		//await createBookings(connection);
 
 		console.log("Debug: Closing mysql");
 		connection.end();
@@ -184,8 +184,8 @@ async function main() {
 async function runCleanup(connection: mysql.Connection) {
 	console.log('Cleaning up old data...');
 
-	await connection.execute(
-		'DROP TABLE IF EXISTS rooms_amenities'
+	/*await connection.execute(
+		'DROP TABLE IF EXISTS room_amenities'
 	);
 	
 	await connection.execute(
@@ -198,15 +198,15 @@ async function runCleanup(connection: mysql.Connection) {
 	
 	await connection.execute(
 		'DROP TABLE IF EXISTS rooms'
-	);
+	);*/
 
 	await connection.execute(
 		'DROP TABLE IF EXISTS users'
 	);
 
-	await connection.execute(
+	/*await connection.execute(
 		'DROP TABLE IF EXISTS contacts'
-	);
+	);*/
 
 }
 
@@ -359,8 +359,8 @@ async function createAmenities(connection: mysql.Connection)
 
 async function createRoomAmenities(connection: mysql.Connection)
 {
-	console.log('Adding rooms_amenities');
-	await connection.query("CREATE TABLE rooms_amenities (" +
+	console.log('Adding room_amenities');
+	await connection.query("CREATE TABLE room_amenities (" +
 		"id INT PRIMARY KEY AUTO_INCREMENT NOT NULL," +
 		"room_id INT NOT NULL," +
 		"amenity_id INT NOT NULL," +
