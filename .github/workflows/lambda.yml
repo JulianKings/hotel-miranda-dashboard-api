@@ -12,6 +12,9 @@ env:
       SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
       SQL_USER: ${{ secrets.SQL_USER }}
       SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        
 
 jobs:
   deploy:
