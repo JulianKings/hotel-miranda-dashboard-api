@@ -1,25 +1,14 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: juliankings
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
-app: hotel-miranda-api
+app: miranda-dashboard
 service: nodejs-aws-lambda
 provider:
   name: aws
-  stage: prod
   runtime: nodejs18.x
-package:
-  exclude:
-    - venv/**
 functions:
   app:
     handler: dist/app.handler
     events:
       - http: ANY /
       - http: ANY /{proxy+}
-    environment:
-      JWT_SECURE_KEY: ${env:JWT_SECURE_KEY}
-      SQL_HOST: ${env:SQL_HOST}
-      SQL_PORT: ${env:SQL_PORT}
-      SQL_DATABASE: ${env:SQL_DATABASE}
-      SQL_USER: ${env:SQL_USER}
-      SQL_PASSWORD: ${env:SQL_PASSWORD}
