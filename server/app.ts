@@ -18,7 +18,6 @@ import amenityController from './controllers/amenitiesController';
 import loginController from './controllers/loginController';
 
 import { applyPassportMiddleware } from './middleware/auth';
-import serverless from 'serverless-http';
 import { connect } from "http2";
 
 dotenv.config();
@@ -75,14 +74,11 @@ app.use('/login', loginRouterHandler);
 
 applyPassportMiddleware(passport);
 
-let handlerServerless = null;
-if(process.env.NODE_ENV === 'production') {
-	handlerServerless = serverless(app);
-} else {
+if(process.env.NODE_ENV !== 'production') {
 	app.listen(3000);
 	console.log('server listening on port 3000');
 }
 
-export const handler = handlerServerless;
+export default app;
 
 //export const handler = serverless(app);

@@ -17,9 +17,10 @@ provider:
     SQL_PASSWORD: ${env:SQL_PASSWORD}
     MY_AWS_ACCESS_KEY: ${env:AWS_ACCESS_KEY}
     MY_AWS_SECRET_ACCESS_KEY: ${env:AWS_SECRET_ACCESS_KEY}
+    NODE_ENV: production
 functions:
   app:
-    handler: dist/app.handler
+    handler: dist/lambda.handler
     events:
       - http: ANY /
       - http: ANY /{proxy+}
