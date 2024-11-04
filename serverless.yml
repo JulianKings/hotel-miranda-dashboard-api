@@ -6,6 +6,17 @@ service: nodejs-aws-lambda
 provider:
   name: aws
   runtime: nodejs18.x
+  region: eu-north-1
+  stage: production
+  environment:
+    JWT_SECURE_KEY: ${env:JWT_SECURE_KEY}
+    SQL_HOST: ${env:SQL_HOST}
+    SQL_PORT: ${env:SQL_PORT}
+    SQL_DATABASE: ${env:SQL_DATABASE}
+    SQL_USER: ${env:SQL_USER}
+    SQL_PASSWORD: ${env:SQL_PASSWORD}
+    MY_AWS_ACCESS_KEY: ${env:AWS_ACCESS_KEY}
+    MY_AWS_SECRET_ACCESS_KEY: ${env:AWS_SECRET_ACCESS_KEY}
 functions:
   app:
     handler: dist/app.handler
