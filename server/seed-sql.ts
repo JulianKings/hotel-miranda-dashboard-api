@@ -21,6 +21,7 @@ function createRandomUser(): ApiUserInterface {
 		position: faker.helpers.arrayElement(['manager', 'room_service', 'reception'])
     };
 }
+/*
 
 function createRandomContact(): ApiContactInterface {
     return {
@@ -71,12 +72,12 @@ class BookingGenerator
 			notes: faker.lorem.paragraph({ min: 3, max: 8})   
 		};
 	}
-}
+}*/
   
 let users: ApiUserInterface[] = faker.helpers.multiple(createRandomUser, { count: 20, });
-const contacts: ApiContactInterface[] = faker.helpers.multiple(createRandomContact, { count: 20, });
-const rooms: ApiRoomInterface[] = faker.helpers.multiple(createRandomRoom, { count: 20, });
-let bookings: ApiBookingInterface[] = [];
+//const contacts: ApiContactInterface[] = faker.helpers.multiple(createRandomContact, { count: 20, });
+//const rooms: ApiRoomInterface[] = faker.helpers.multiple(createRandomRoom, { count: 20, });
+//let bookings: ApiBookingInterface[] = [];
 
 interface QueryResultSchema {   
 	fieldCount?: number,   
@@ -252,6 +253,8 @@ async function createUsers(connection: mysql.Connection) {
 	await Promise.all(concatPromise);
 }
 
+/*
+
 async function createContact(contact: ApiContactInterface, index: number, connection: mysql.Connection)
 {
 	const [result] = await connection.execute("INSERT INTO contacts (customer_name, customer_mail, customer_phone, date, status, subject, comment)" +
@@ -408,7 +411,7 @@ async function createBookings(connection: mysql.Connection) {
 	});
 
 	await Promise.all(concatPromise);
-}
+} */
 
 function getRandomInt(max: number): number
 {
