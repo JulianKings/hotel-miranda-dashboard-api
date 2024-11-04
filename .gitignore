@@ -94,6 +94,7 @@ dist
 # lambda
 old_serverless
 .serverless
+serverless.yml
 
 # Gatsby files
 .cache/
