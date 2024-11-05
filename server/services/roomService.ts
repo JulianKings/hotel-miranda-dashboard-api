@@ -26,7 +26,7 @@ export class RoomService {
     {
         if(roomObject._id === undefined)
         {
-            const result = runQuery("INSERT INTO rooms (type, floor, number, images, price, offer, status, description)" +
+            const result = await runQuery("INSERT INTO rooms (type, floor, number, images, price, offer, status, description)" +
 		        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
 		    [roomObject.type, roomObject.floor, roomObject.number, roomObject.images, roomObject.price, roomObject.offer, roomObject.status, roomObject.description])
 
@@ -36,8 +36,18 @@ export class RoomService {
                 ...roomObject,
                 id: newId,
                 _id: newId+"",
-                amenities: []
+                images: roomObject.images.replaceAll('&#x2F;', '/'),                
             }
+
+            if(roomObject.amenities !== undefined)
+            {
+                for(const amenity of roomObject.amenities)
+                {
+                    await runQuery("INSERT INTO room_amenities (room_id, amenity_id) VALUES (?, ?)", [newId, amenity]);
+                }
+            }
+
+
             return roomResult;
         } else {
             await runQuery("UPDATE rooms SET ? WHERE id = ?",
@@ -50,8 +60,24 @@ export class RoomService {
                     offer: roomObject.offer, 
                     status: roomObject.status, 
                     description: roomObject.description
-                },  roomObject._id])
-            return roomObject;
+                },  roomObject._id]);
+
+
+            if(roomObject.amenities !== undefined)
+            {
+                await runQuery("DELETE FROM room_amenities WHERE room_id = ?", [roomObject._id]);
+                for(const amenity of roomObject.amenities)
+                {
+                    await runQuery("INSERT INTO room_amenities (room_id, amenity_id) VALUES (?, ?)", [roomObject._id, amenity]);
+                }
+            }
+
+            const roomResult = { 
+                ...roomObject,
+                id: roomObject._id,
+                images: roomObject.images.replaceAll('&#x2F;', '/'),                
+            }
+            return roomResult;
         }
     }
 
@@ -67,6 +93,7 @@ export class RoomService {
             return {
                 ...room,
                 _id: room.id+"",
+                images: room.images.replaceAll('&#x2F;', '/'),
                 amenities: (room.amenities_list === null) ? [] : 
                     (room.amenities_list.includes(',') ? room.amenities_list.split(',') : [room.amenities_list])
             }

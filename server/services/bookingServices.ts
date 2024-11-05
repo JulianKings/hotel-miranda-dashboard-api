@@ -2,16 +2,17 @@ import { QueryResultSchema } from 'interfaces/queryHelpers';
 import { ApiBookingInterface } from '../interfaces/bookings';
 import { ApiRoomInterface } from '../interfaces/room';
 import { runExecute, runFastQuery, runQuery } from '../database/databaseFunctions';
+import { ApiClientInterface } from 'interfaces/client';
 
 export class BookingService {
 
     static async loadAll(): Promise<ApiBookingInterface[]> {
-        const result = await runFastQuery("SELECT bookings.*,clients.name AS clientName, clients.email AS clientMail,clients.id AS clientId,rooms.id as roomId,rooms.type as roomType,rooms.floor as roomFloor,rooms.number as roomNumber,rooms.images as roomImages,rooms.price as roomPrice,rooms.offer as roomOffer,rooms.status as roomStatus,rooms.description as roomDescription FROM bookings INNER JOIN rooms ON bookings.room_id = rooms.id INNER JOIN clients ON bookings.client_id = clients.id GROUP BY bookings.id");
+        const result = await runFastQuery("SELECT bookings.*,clients.name AS clientName, clients.email AS clientMail,clients.id AS clientId,clients.created_at as clientCreatedAt,clients.updated_at as clientUpdatedAt,rooms.id as roomId,rooms.type as roomType,rooms.floor as roomFloor,rooms.number as roomNumber,rooms.images as roomImages,rooms.price as roomPrice,rooms.offer as roomOffer,rooms.status as roomStatus,rooms.description as roomDescription FROM bookings INNER JOIN rooms ON bookings.room_id = rooms.id INNER JOIN clients ON bookings.client_id = clients.id GROUP BY bookings.id");
         return this.formatBookingArray(result as ApiBookingInterface[]);
     }
 
     static async loadBookingById(id: string): Promise<ApiBookingInterface | null> {
-        const result = await runQuery("SELECT bookings.*,clients.name AS clientName, clients.email AS clientMail,clients.id AS clientId,rooms.id as roomId,rooms.type as roomType,rooms.floor as roomFloor,rooms.number as roomNumber,rooms.images as roomImages,rooms.price as roomPrice,rooms.offer as roomOffer,rooms.status as roomStatus,rooms.description as roomDescription FROM bookings INNER JOIN rooms ON bookings.room_id = rooms.id INNER JOIN clients ON bookings.client_id = clients.id WHERE bookings.id = ? GROUP BY bookings.id", [id]);
+        const result = await runQuery("SELECT bookings.*,clients.name AS clientName, clients.email AS clientMail,clients.id AS clientId,clients.created_at as clientCreatedAt,clients.updated_at as clientUpdatedAt,rooms.id as roomId,rooms.type as roomType,rooms.floor as roomFloor,rooms.number as roomNumber,rooms.images as roomImages,rooms.price as roomPrice,rooms.offer as roomOffer,rooms.status as roomStatus,rooms.description as roomDescription FROM bookings INNER JOIN rooms ON bookings.room_id = rooms.id INNER JOIN clients ON bookings.client_id = clients.id WHERE bookings.id = ? GROUP BY bookings.id", [id]);
         const bookingResult = this.formatBookingArray(result as ApiBookingInterface[]);
 
         if(bookingResult.length > 0)
@@ -86,8 +87,12 @@ export class BookingService {
                 client: {
                     id: booking.clientId,
                     name: booking.clientName,
-                    mail: booking.clientMail
-                }
+                    email: booking.clientMail,
+                    created_at: (booking.clientCreatedAt !== null && booking.clientCreatedAt !== undefined) ?
+                        new Date(Date.parse((typeof(booking.clientCreatedAt) === 'string') ? booking.clientCreatedAt : (booking.clientCreatedAt as Date).toDateString())) : undefined,
+                    updated_at: (booking.clientUpdatedAt && booking.clientUpdatedAt !== undefined) ?
+                    new Date(Date.parse((typeof(booking.clientUpdatedAt) === 'string') ? booking.clientUpdatedAt : (booking.clientUpdatedAt as Date).toDateString())) : undefined
+                } as ApiClientInterface
             }
         })
     }
