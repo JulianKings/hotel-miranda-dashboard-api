@@ -28,7 +28,7 @@ export const applyPassportMiddleware = (passport: PassportStatic) =>
                     return done(null, false, { path: nameField, msg: 'User not found' } as unknown as IVerifyOptions);
                 }
 
-                const match = await bcrypt.compare(password, user.password);
+                const match = await bcrypt.compare(password, user.password as string);
 
                 if (!match) {
                     return done(null, false, { path: pwdField, msg: 'Wrong Password' }  as unknown as IVerifyOptions);

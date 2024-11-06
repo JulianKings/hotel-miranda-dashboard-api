@@ -27,6 +27,7 @@ export class UserService {
 
         if(userResult.length > 0)
         {
+            userResult[0].password = (result as ApiUserInterface[])[0].password;
             return userResult[0];
         } else {
             return null;
@@ -39,7 +40,7 @@ export class UserService {
         {
             const result = await runExecute("INSERT INTO users (name, full_name, password, mail, profile_picture, start, description, contact, status, position)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                [userObject.name, userObject.full_name, userObject.password, userObject.mail, userObject.profile_picture, userObject.start, 
+                [userObject.name, userObject.full_name, userObject.password as string, userObject.mail, userObject.profile_picture, userObject.start, 
                     userObject.description, userObject.contact, userObject.status, userObject.position])
 
             const formatedResult = result as QueryResultSchema;
@@ -47,25 +48,33 @@ export class UserService {
             const userResult = { 
                 ...userObject,
                 id: newId,
+                profile_picture: userObject.profile_picture.replaceAll('&#x2F;', '/'),
                 _id: newId+"",
                 start: new Date(Date.parse((typeof(userObject.start) === 'string') ? userObject.start : userObject.start.toDateString()))
             }
             return userResult;
         } else {
+            const updateObj: ApiUserInterface = {
+                name: userObject.name, 
+                full_name: userObject.full_name, 
+                mail: userObject.mail, 
+                profile_picture: userObject.profile_picture, 
+                start: userObject.start, 
+                description: userObject.description, 
+                contact: userObject.contact, 
+                status: userObject.status, 
+                position: userObject.position
+            }
+
+            if(userObject.password !== undefined && userObject.password !== '')
+            {
+                updateObj.password = userObject.password;
+            }
+
             await runQuery("UPDATE users SET ? WHERE id = ?",
-                [{
-                    name: userObject.name, 
-                    full_name: userObject.full_name, 
-                    password: userObject.password, 
-                    mail: userObject.mail, 
-                    profile_picture: userObject.profile_picture, 
-                    start: userObject.start, 
-                    description: userObject.description, 
-                    contact: userObject.contact, 
-                    status: userObject.status, 
-                    position: userObject.position
-                },  userObject._id])
-            return userObject;
+                [updateObj,  userObject._id])
+
+            return this.formatUserArray([userObject])[0];
         }
     }
 
@@ -81,6 +90,7 @@ export class UserService {
             return {
                 ...user,
                 _id: user.id+"",
+                password: '',
                 profile_picture: user.profile_picture.replaceAll('&#x2F;', '/'),
                 start: new Date(Date.parse((typeof(user.start) === 'string') ? user.start : user.start.toDateString()))
             }
