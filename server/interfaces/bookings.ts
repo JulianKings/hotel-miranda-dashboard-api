@@ -6,7 +6,8 @@ export interface ApiBookingInterface extends ApiAbstractInterface {
     client_id: number;
     date: Date;
     status: 'checking_out' | 'checking_in' | 'in_progress',
-    room: number | ApiRoomInterface;
+    room_id: number;
+    room?: ApiRoomInterface;
     client?: ApiClientInterface;
     check_in: Date;
     check_out: Date;

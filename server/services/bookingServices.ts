@@ -29,31 +29,23 @@ export class BookingService {
         {
             const result = await runExecute("INSERT INTO bookings (client_id, date, status, room_id, check_in, check_out, notes)" +
 		        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-		        [bookingObject.client_id, bookingObject.date, bookingObject.status, bookingObject.room, bookingObject.check_in, bookingObject.check_out, bookingObject.notes])
+		        [bookingObject.client_id, bookingObject.date, bookingObject.status, bookingObject.room_id, bookingObject.check_in, bookingObject.check_out, bookingObject.notes])
 
             const formatedResult = result as QueryResultSchema;
             const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
-            const bookingResult = { 
-                ...bookingObject,
-                id: newId,
-                _id: newId+"",
-                date: new Date(Date.parse((typeof(bookingObject.date) === 'string') ? bookingObject.date : bookingObject.date.toDateString())),
-                check_in: new Date(Date.parse((typeof(bookingObject.check_in) === 'string') ? bookingObject.check_in : bookingObject.check_in.toDateString())),
-                check_out: new Date(Date.parse((typeof(bookingObject.check_out) === 'string') ? bookingObject.check_out : bookingObject.check_out.toDateString()))
-            }
-            return bookingResult;
+            return this.loadBookingById(newId+"");
         } else {
             await runQuery("UPDATE bookings SET ? WHERE id = ?",
                 [{
                     client_id: bookingObject.client_id, 
                     date: bookingObject.date, 
                     status: bookingObject.status, 
-                    room: bookingObject.room, 
+                    room_id: bookingObject.room_id, 
                     check_in: bookingObject.check_in, 
                     check_out: bookingObject.check_out,
                     notes: bookingObject.notes
-                },  bookingObject._id])
-            return bookingObject;
+                },  bookingObject._id]);
+            return this.loadBookingById(bookingObject._id);
         }
     }
 
