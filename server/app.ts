@@ -16,16 +16,15 @@ import roomController from './controllers/roomController';
 import bookingController from './controllers/bookingController';
 import amenityController from './controllers/amenitiesController';
 import loginController from './controllers/loginController';
+import clientController from './controllers/clientController';
 
 import { applyPassportMiddleware } from './middleware/auth';
-import { connect } from "http2";
 
 dotenv.config();
 const app = express();
 
 
 const jwtKey: string = (process.env.JWT_SECURE_KEY !== undefined) ? process.env.JWT_SECURE_KEY : 'defaultSecretKey915534b';
-
 
 app.set('jwt_secret_password', jwtKey);
 
@@ -69,6 +68,8 @@ const bookingRouterHandler = bookingController(passport);
 app.use('/bookings', passport.authenticate('jwt', { session: false }), bookingRouterHandler);
 const amenitiesRouterHandler = amenityController(passport);
 app.use('/amenities', passport.authenticate('jwt', { session: false }), amenitiesRouterHandler);
+const clientRouterHandler = clientController(passport);
+app.use('/client', passport.authenticate('jwt', { session: false }), clientRouterHandler);
 const loginRouterHandler = loginController(passport);
 app.use('/login', loginRouterHandler);
 
