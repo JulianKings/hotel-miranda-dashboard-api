@@ -16,11 +16,11 @@ export default function (passport: PassportStatic)
     }));
 
     bookingController.post('/', [
-        body("customer_name", "Booking customer name must not be empty.")
+        body("room_id", "Booking room must not be empty.")
             .trim()
             .isLength({ min: 1 })
             .escape(), 
-        body("customer_dni", "Booking customer dni must not be empty.")
+        body("client_id", "Booking customer must not be empty.")
             .trim()
             .isLength({ min: 1 })
             .escape(), 
@@ -29,10 +29,6 @@ export default function (passport: PassportStatic)
             .isLength({ min: 1 })
             .escape(), 
         body("status", "Booking status must not be empty.")
-            .trim()
-            .isLength({ min: 1 })
-            .escape(), 
-        body("room", "Booking room must not be empty.")
             .trim()
             .isLength({ min: 1 })
             .escape(), 
@@ -79,11 +75,11 @@ export default function (passport: PassportStatic)
     }));
 
     bookingController.put('/:id', [
-        body("customer_name", "Booking customer name must not be empty.")
+        body("room_id", "Booking room must not be empty.")
             .trim()
             .isLength({ min: 1 })
             .escape(), 
-        body("customer_dni", "Booking customer dni must not be empty.")
+        body("client_id", "Booking customer must not be empty.")
             .trim()
             .isLength({ min: 1 })
             .escape(), 
@@ -92,10 +88,6 @@ export default function (passport: PassportStatic)
             .isLength({ min: 1 })
             .escape(), 
         body("status", "Booking status must not be empty.")
-            .trim()
-            .isLength({ min: 1 })
-            .escape(), 
-        body("room", "Booking room must not be empty.")
             .trim()
             .isLength({ min: 1 })
             .escape(), 

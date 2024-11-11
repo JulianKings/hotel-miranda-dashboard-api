@@ -1,6 +1,7 @@
 import { QueryResultSchema } from 'interfaces/queryHelpers';
 import { ApiUserInterface } from '../interfaces/user';
 import { runExecute, runFastQuery, runQuery } from '../database/databaseFunctions';
+import { getDateString } from '../util/dateHelper';
 
 export class UserService {
 
@@ -40,7 +41,7 @@ export class UserService {
         {
             const result = await runExecute("INSERT INTO users (name, full_name, password, mail, profile_picture, start, description, contact, status, position)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                [userObject.name, userObject.full_name, userObject.password as string, userObject.mail, userObject.profile_picture, userObject.start, 
+                [userObject.name, userObject.full_name, userObject.password as string, userObject.mail, userObject.profile_picture, getDateString(new Date(Date.parse(userObject.start as string))), 
                     userObject.description, userObject.contact, userObject.status, userObject.position])
 
             const formatedResult = result as QueryResultSchema;
@@ -59,7 +60,7 @@ export class UserService {
                 full_name: userObject.full_name, 
                 mail: userObject.mail, 
                 profile_picture: userObject.profile_picture, 
-                start: userObject.start, 
+                start: getDateString(new Date(Date.parse(userObject.start as string))), 
                 description: userObject.description, 
                 contact: userObject.contact, 
                 status: userObject.status, 
