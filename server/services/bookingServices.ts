@@ -3,6 +3,7 @@ import { ApiBookingInterface } from '../interfaces/bookings';
 import { ApiRoomInterface } from '../interfaces/room';
 import { runExecute, runFastQuery, runQuery } from '../database/databaseFunctions';
 import { ApiClientInterface } from 'interfaces/client';
+import { getDateString } from '../util/dateHelper';
 
 export class BookingService {
 
@@ -29,7 +30,7 @@ export class BookingService {
         {
             const result = await runExecute("INSERT INTO bookings (client_id, date, status, room_id, check_in, check_out, notes)" +
 		        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-		        [bookingObject.client_id, bookingObject.date, bookingObject.status, bookingObject.room_id, bookingObject.check_in, bookingObject.check_out, bookingObject.notes])
+		        [bookingObject.client_id, getDateString(bookingObject.date), bookingObject.status, bookingObject.room_id, getDateString(bookingObject.check_in), getDateString(bookingObject.check_out), bookingObject.notes])
 
             const formatedResult = result as QueryResultSchema;
             const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
@@ -38,11 +39,11 @@ export class BookingService {
             await runQuery("UPDATE bookings SET ? WHERE id = ?",
                 [{
                     client_id: bookingObject.client_id, 
-                    date: bookingObject.date, 
+                    date: getDateString(bookingObject.date), 
                     status: bookingObject.status, 
                     room_id: bookingObject.room_id, 
-                    check_in: bookingObject.check_in, 
-                    check_out: bookingObject.check_out,
+                    check_in: getDateString(bookingObject.check_in), 
+                    check_out: getDateString(bookingObject.check_out),
                     notes: bookingObject.notes
                 },  bookingObject._id]);
             return this.loadBookingById(bookingObject._id);

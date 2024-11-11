@@ -1,6 +1,7 @@
 import { QueryResultSchema } from 'interfaces/queryHelpers';
 import { ApiContactInterface } from '../interfaces/contact';
 import { runExecute, runFastQuery, runQuery } from '../database/databaseFunctions';
+import { getDateString } from '../util/dateHelper';
 
 export class ContactService {
 
@@ -27,7 +28,7 @@ export class ContactService {
         {
             const result = await runExecute("INSERT INTO contacts (customer_name, customer_mail, customer_phone, date, status, subject, comment)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?);",
-                [contactObject.customer_name, contactObject.customer_mail, contactObject.customer_phone, contactObject.date, contactObject.status, contactObject.subject, contactObject.comment])
+                [contactObject.customer_name, contactObject.customer_mail, contactObject.customer_phone, getDateString(contactObject.date), contactObject.status, contactObject.subject, contactObject.comment])
             
             const formatedResult = result as QueryResultSchema;
             const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
@@ -44,7 +45,7 @@ export class ContactService {
                     customer_name: contactObject.customer_name, 
                     customer_mail: contactObject.customer_mail, 
                     customer_phone: contactObject.customer_phone, 
-                    date: contactObject.date, 
+                    date: getDateString(contactObject.date), 
                     status: contactObject.status, 
                     subject: contactObject.subject, 
                     comment: contactObject.comment

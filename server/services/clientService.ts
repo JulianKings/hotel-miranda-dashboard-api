@@ -1,3 +1,4 @@
+import { getDateString } from '../util/dateHelper';
 import { runFastQuery, runQuery } from '../database/databaseFunctions';
 import { ApiClientInterface } from 'interfaces/client';
 
@@ -28,8 +29,8 @@ export class ClientService {
                 [{
                     name: clientObject.name, 
                     email: clientObject.email, 
-                    created_at: clientObject.created_at, 
-                    updated_at: clientObject.updated_at
+                    created_at: getDateString(new Date(Date.parse(clientObject.created_at as string))), 
+                    updated_at: getDateString(new Date(Date.parse(clientObject.updated_at as string)))
                 },  clientObject._id])
             return clientObject;
         }
