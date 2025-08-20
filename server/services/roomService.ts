@@ -30,8 +30,8 @@ export class RoomService {
 		        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
 		    [roomObject.type, roomObject.floor, roomObject.number, roomObject.images, roomObject.price, roomObject.offer, roomObject.status, roomObject.description])
 
-            const formatedResult = result as QueryResultSchema;
-            const newId = (formatedResult.insertId !== undefined) ? formatedResult.insertId : -1;
+            const formattedResult = result as QueryResultSchema;
+            const newId = (formattedResult.insertId !== undefined) ? formattedResult.insertId : -1;
             const roomResult = { 
                 ...roomObject,
                 id: newId,
